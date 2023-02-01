@@ -37,7 +37,7 @@ const messenger: Message[] = [
 ];
 
 const messagesStore = create<MessageStore>((set) => ({
-  messages: messenger,
+  messages: [],
   setMessages: (messages) => set({ messages }),
 
   chatHeight: 0,

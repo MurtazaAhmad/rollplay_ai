@@ -1,16 +1,19 @@
 import { GetServerSidePropsContext } from "next";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
-import Navbar from "@/components/Navbar";
-import Link from "next/link";
 
-export default function Home() {
+import Navbar from "@/components/Navbar";
+import Characters from "@/components/Characters";
+
+type Props = {
+  chats: any[];
+};
+
+export default function Home({ chats }: Props) {
   return (
     <main className="min-h-screen">
       <Navbar />
 
-      <Link href="/chat" className="block my-12 text-center text-blue-400">
-        Go to chat
-      </Link>
+      <Characters chats={chats} />
     </main>
   );
 }
@@ -36,10 +39,33 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
       },
     };
 
+  // Getting chatrooms
+  const { data: chatData } = await supabase
+    .from("chats")
+    .select()
+    .eq("user_id", session.user.id);
+
+  const res = chatData?.map(async (data) => {
+    const { data: ai } = await supabase
+      .from("characters")
+      .select()
+      .limit(1)
+      .eq("id", data.ai_id)
+      .single();
+
+    return {
+      ai,
+      chat_id: data.id,
+    };
+  });
+
+  const chats = await Promise.all(res as []);
+
   return {
     props: {
       initialSession: session,
       user: session.user,
+      chats,
     },
   };
 }

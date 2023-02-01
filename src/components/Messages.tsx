@@ -26,17 +26,15 @@ const Messages: FC = () => {
             }`}
           >
             <p className="break-words whitespace-pre-wrap">{message.content}</p>
-
-            {message.timestamp && (
-              <p className="text-sm text-gray-500">
-                {new Intl.DateTimeFormat("en-EN", {
-                  timeStyle: "short",
-                }).format(message.timestamp)}
-              </p>
-            )}
           </div>
         );
       })}
+
+      {messages.length === 0 && (
+        <p className="text-xs text-center text-gray-400">
+          Write your first message to start a conversation.
+        </p>
+      )}
 
       {/* vertical scroll fix */}
       <span ref={dummy}></span>
