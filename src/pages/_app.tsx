@@ -10,6 +10,7 @@ import {
 import AuthContextProvider from "@/context/authContext";
 
 import { Inter } from "@next/font/google";
+import { Toaster } from "react-hot-toast";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -41,6 +42,8 @@ export default function App({
       <AuthContextProvider>
         <Component {...pageProps} />
       </AuthContextProvider>
+
+      <Toaster position="bottom-center" />
     </SessionContextProvider>
   );
 }

@@ -1,6 +1,7 @@
 import { FormEvent, useState } from "react";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/router";
+import { toast } from "react-hot-toast";
 
 const SignIn = () => {
   const supabaseClient = useSupabaseClient();
@@ -22,6 +23,8 @@ const SignIn = () => {
     e.preventDefault();
     setLogging(true);
 
+    const toastId = toast.loading("Logging in...");
+
     // loggin user
     const { error } = await supabaseClient.auth.signInWithPassword({
       email: credentials.email,
@@ -29,9 +32,16 @@ const SignIn = () => {
     });
 
     if (error) {
-      console.error(error);
+      toast.error(error.message, {
+        id: toastId,
+      });
+
       return;
     }
+
+    toast.success("Logged in", {
+      id: toastId,
+    });
 
     setLogging(false);
     // redirect to home

@@ -27,13 +27,16 @@ const Auth = () => {
         <p className="my-4 text-sm">Your Personal AI Friend</p>
 
         <article className="flex flex-col items-center justify-center mt-12 space-y-4">
-          <button className="w-full px-6 py-2 bg-white rounded-full text-dark">
-            <Link href="/auth/signin">Continue with Email</Link>
-          </button>
+          <Link
+            href="/auth/signin"
+            className="w-full px-6 py-2 bg-white rounded-full text-dark"
+          >
+            Continue with Email
+          </Link>
 
-          <button className="text-white">
-            <Link href="/auth/signup">Create account with Email</Link>
-          </button>
+          <Link href="/auth/signup" className="text-white">
+            Create account with Email
+          </Link>
 
           <p className="text-sm text-gray-500">or</p>
 

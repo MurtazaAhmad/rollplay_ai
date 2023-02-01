@@ -2,6 +2,7 @@ import { FormEvent, useState } from "react";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
 import { useRouter } from "next/router";
+import { toast } from "react-hot-toast";
 
 const SignUp = () => {
   const supabaseClient = useSupabaseClient();
@@ -22,8 +23,9 @@ const SignUp = () => {
 
   const handleRegister = async (e: FormEvent) => {
     e.preventDefault();
-
     setRegistering(true);
+
+    const toastId = toast.loading("Registering user...");
 
     // registering usere
     const { error } = await supabaseClient.auth.signUp({
@@ -33,9 +35,16 @@ const SignUp = () => {
     });
 
     if (error) {
-      console.error(error);
+      toast.error(error.message, {
+        id: toastId,
+      });
+
       return;
     }
+
+    toast.success("Registered", {
+      id: toastId,
+    });
 
     setRegistering(false);
     // redirect to home
