@@ -19,7 +19,7 @@ const NewCharacter = () => {
     context: "",
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     const { name, value } = e.target;
 
     if (name === "age") {
