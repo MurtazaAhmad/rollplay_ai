@@ -18,19 +18,19 @@ interface MessageStore {
 const messenger: Message[] = [
   {
     author: "me",
-    content: "Hello world.",
+    content: "Hello.",
     timestamp: new Date(Date.now() - 5000),
     isAI: true,
   },
   {
     author: "me",
-    content: "Hello asdaskdjaskdasd.",
+    content: "This messages are mockup.",
     timestamp: new Date(Date.now() - 3000),
     isAI: true,
   },
   {
     author: "me",
-    content: "ksajdlkasjdlkasdjklasjdskald.",
+    content: "Chat is not working yet.",
     timestamp: new Date(Date.now() - 1000),
     isAI: true,
   },

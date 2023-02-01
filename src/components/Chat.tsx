@@ -1,7 +1,11 @@
 import Messages from "@/components/Messages";
 import MessageInput from "@/components/MessageInput";
 
+import useAuth from "@/hooks/useAuth";
+
 const Chat = () => {
+  const { user } = useAuth();
+
   return (
     <section className="flex flex-col h-screen">
       {/* chat container */}

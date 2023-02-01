@@ -7,6 +7,7 @@ import {
   SessionContextProvider,
   Session as SupabaseSession,
 } from "@supabase/auth-helpers-react";
+import AuthContextProvider from "@/context/authContext";
 
 import { Inter } from "@next/font/google";
 
@@ -28,6 +29,7 @@ export default function App({
       supabaseClient={supabaseClient}
       initialSession={pageProps.initialSession}
     >
+      {/* Optimized font family */}
       <style global jsx>
         {`
           :root {
@@ -36,7 +38,9 @@ export default function App({
         `}
       </style>
 
-      <Component {...pageProps} />
+      <AuthContextProvider>
+        <Component {...pageProps} />
+      </AuthContextProvider>
     </SessionContextProvider>
   );
 }

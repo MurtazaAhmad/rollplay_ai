@@ -1,6 +1,25 @@
+import React from "react";
 import Link from "next/link";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { useRouter } from "next/router";
 
 const Auth = () => {
+  const supabase = useSupabaseClient();
+  const router = useRouter();
+
+  const handleGoogleAuth = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+    });
+
+    if (error) {
+      console.error(error);
+      return;
+    }
+
+    router.replace("/");
+  };
+
   return (
     <main className="grid h-screen bg-dark place-items-center">
       <section className="text-center text-white w-[90%] md:max-w-md">
@@ -18,7 +37,10 @@ const Auth = () => {
 
           <p className="text-sm text-gray-500">or</p>
 
-          <button className="w-full px-6 py-2 bg-blue-500 rounded-full">
+          <button
+            onClick={handleGoogleAuth}
+            className="w-full px-6 py-2 bg-blue-500 rounded-full"
+          >
             Continue with Google
           </button>
         </article>
