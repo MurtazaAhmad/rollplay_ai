@@ -45,7 +45,7 @@ const MessageInput = () => {
       author: user!.name,
       content: message,
       chat_id: 2,
-      created_at: new Date(),
+      created_at: new Date().toLocaleDateString(),
       isAI: false,
     };
 
@@ -69,12 +69,15 @@ const MessageInput = () => {
     }).then((res) => res.json());
 
     // retrieving data
-    const aiText = data.response[0].text;
+
+    // removing all initals whitespaces on text
+    const aiText = data.response[0].text.replace(/^[\s]*(.*)/, "$1");
+
     const aiMessage = {
       author: character?.name || "",
       content: aiText,
       chat_id: parseInt(query.id as string),
-      created_at: new Date(),
+      created_at: new Date().toLocaleDateString(),
       isAI: true,
     };
 
@@ -98,7 +101,7 @@ const MessageInput = () => {
       <button
         onClick={sendMessage}
         disabled={!message}
-        className="disabled:opacity-5F0"
+        className="disabled:opacity-50"
       >
         <PaperAirplaneIcon className="w-5 h-5 text-white" />
       </button>

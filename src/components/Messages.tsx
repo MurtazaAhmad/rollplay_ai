@@ -1,31 +1,55 @@
 import { FC, useEffect, useRef } from "react";
 import useMessagesStore from "@/stores/messages";
 
+import orderChatsByDate from "@/utils/orderChatsByDate";
+
 const Messages: FC = () => {
   // dummy ref to mantain vertical scroll
   const dummy = useRef<any>(null);
   const { messages, isAIAnswering } = useMessagesStore();
+
+  const orderedMessages = orderChatsByDate(messages);
 
   useEffect(() => {
     dummy.current.scrollIntoView();
   }, [messages, isAIAnswering]);
 
   return (
-    <div className="flex flex-col h-full px-6 py-4 space-y-2 flex-start">
+    <div className="flex flex-col h-full px-6 py-4 flex-start">
       {/* vertical scroll fix */}
       <div className="flex-1"></div>
 
-      {messages.map((message, i) => {
-        const isAI = message.isAI;
-
+      {orderedMessages.map((chat, i) => {
         return (
-          <div
-            key={i}
-            className={`p-2 bg-white border rounded-md w-max max-w-[85%] ${
-              isAI ? "self-start" : "!bg-dark text-white self-end ml-auto"
-            }`}
-          >
-            <p className="break-words whitespace-pre-wrap">{message.content}</p>
+          <div key={i}>
+            <header className="mb-10 text-sm text-center text-gray-400">
+              <h3>
+                {new Intl.DateTimeFormat("en-US", {
+                  dateStyle: "medium",
+                }).format(new Date(chat.date))}
+              </h3>
+            </header>
+
+            <div className="space-y-2">
+              {chat.messages.map((message: any) => {
+                const isAI = message.isAI;
+
+                return (
+                  <div
+                    key={i}
+                    className={`p-2 bg-white border rounded-md w-max max-w-[85%] ${
+                      isAI
+                        ? "self-start"
+                        : "!bg-dark text-white self-end ml-auto"
+                    }`}
+                  >
+                    <p className="break-words whitespace-pre-wrap">
+                      {message.content}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         );
       })}

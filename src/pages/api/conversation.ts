@@ -10,9 +10,16 @@ const configuration = new Configuration({
   apiKey: process.env.OPENAI_SECRET_KEY,
 });
 
+// admin supabase client
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL as string,
-  process.env.NEXT_PUBLIC_SUPABASE_KEY as string
+  process.env.SUPABASE_SERVICE_ROLE_KEY as string,
+  {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+    },
+  }
 );
 
 const openai = new OpenAIApi(configuration);
@@ -40,7 +47,7 @@ export default async function handler(
 
   const prompt = `
     You're going to generate a message as a character based on the following context.
-    Your message must not have breaklines at the beggining.
+    
     -
     Your name: ${characterData?.name}.
     Your gender: ${characterData?.gender}.
@@ -49,7 +56,7 @@ export default async function handler(
     -
     User last message: ${input}
     -
-    Your response: 
+    Important: (Avoid breaklines at the beginning: "/\/n")
   `;
 
   try {

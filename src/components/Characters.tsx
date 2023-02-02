@@ -24,7 +24,7 @@ const Characters: FC<Props> = ({ chats }) => {
           <h3 className="font-bold">Chatrooms</h3>
         </header>
 
-        <ul className="mt-6">
+        <ul className="mt-6 space-y-4">
           {chats.map((chat) => (
             <li key={chat.chat_id}>
               <Link
