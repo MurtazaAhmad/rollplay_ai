@@ -1,10 +1,30 @@
 import Messages from "@/components/Messages";
 import MessageInput from "@/components/MessageInput";
 
-import useAuth from "@/hooks/useAuth";
+import useMessagesStore from "@/stores/messages";
 
-const Chat = () => {
-  const { user } = useAuth();
+import useAuth from "@/hooks/useAuth";
+import { FC, useEffect } from "react";
+
+type Message = {
+  content: string;
+  author: string;
+  created_at?: Date;
+  isAI: boolean;
+  id: number;
+  chat_id: number;
+};
+
+type Props = {
+  messages: Message[];
+};
+
+const Chat: FC<Props> = ({ messages }) => {
+  const { setMessages } = useMessagesStore();
+
+  useEffect(() => {
+    setMessages(messages);
+  }, []);
 
   return (
     <section className="flex flex-col h-screen">

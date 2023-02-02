@@ -1,25 +1,85 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
 
 import useMessagesStore from "@/stores/messages";
+import useAuth from "@/hooks/useAuth";
+import { useRouter } from "next/router";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
 const MessageInput = () => {
+  const { user } = useAuth();
+  const { messages, setMessages, setIsAIAnswering } = useMessagesStore();
   const [message, setMessage] = useState("");
+  const [character, setCharacter] = useState<Character | null>(null);
 
-  const { messages, setMessages } = useMessagesStore();
+  const supabase = useSupabaseClient();
+  const { query } = useRouter();
 
-  const sendMessage = () => {
+  useEffect(() => {
+    // getting ai info
+    async function getData() {
+      // Getting chatroom
+      const { data: chatData } = await supabase
+        .from("chats")
+        .select()
+        .eq("id", query.id)
+        .single();
+
+      // Getting character
+      const { data: characterData } = await supabase
+        .from("characters")
+        .select()
+        .eq("id", chatData.ai_id)
+        .single();
+
+      setCharacter(characterData);
+    }
+
+    getData();
+  }, []);
+
+  const sendMessage = async () => {
     if (message === "") return;
 
-    const newMessage = {
-      author: "me",
+    const newMessage: Message = {
+      author: user!.name,
       content: message,
-      timestamp: new Date(),
+      chat_id: 2,
+      created_at: new Date(),
       isAI: false,
     };
 
-    setMessages([...messages, newMessage]);
+    messages.push(newMessage);
+    setMessages(messages);
     setMessage("");
+
+    // ai answer
+    setIsAIAnswering(true);
+
+    // sending message to AI
+    const data = await fetch("/api/conversation", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        input: message,
+        ai_id: character?.id,
+      }),
+    }).then((res) => res.json());
+
+    // retrieving data
+    const aiText = data.response[0].text;
+    const aiMessage = {
+      author: character?.name || "",
+      content: aiText,
+      chat_id: parseInt(query.id as string),
+      created_at: new Date(),
+      isAI: true,
+    };
+
+    setIsAIAnswering(false);
+    setMessages([...messages, aiMessage]);
   };
 
   return (
