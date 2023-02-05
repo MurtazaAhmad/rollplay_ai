@@ -12,6 +12,8 @@ const MessageInput = () => {
   const [message, setMessage] = useState("");
   const [character, setCharacter] = useState<Character | null>(null);
 
+  const [sendingMessage, setSendingMessage] = useState(false);
+
   const supabase = useSupabaseClient();
   const { query } = useRouter();
 
@@ -40,6 +42,7 @@ const MessageInput = () => {
 
   const sendMessage = async () => {
     if (message === "") return;
+    setSendingMessage(true);
 
     const newMessage: Message = {
       author: user!.name,
@@ -49,8 +52,19 @@ const MessageInput = () => {
       isAI: false,
     };
 
-    messages.push(newMessage);
+    messages.unshift(newMessage);
     setMessages(messages);
+
+    // save own message
+    await supabase.from("messages").insert({
+      created_at: new Date().toLocaleDateString(),
+      content: message,
+      chat_id: query.id,
+      author: user?.name,
+      isAI: false,
+    });
+
+    setSendingMessage(true);
     setMessage("");
 
     // ai answer
@@ -65,6 +79,7 @@ const MessageInput = () => {
       body: JSON.stringify({
         input: message,
         ai_id: character?.id,
+        chat_id: query.id,
       }),
     }).then((res) => res.json());
 
@@ -82,7 +97,16 @@ const MessageInput = () => {
     };
 
     setIsAIAnswering(false);
-    setMessages([...messages, aiMessage]);
+    setMessages([aiMessage, ...messages]);
+
+    // saving ai message
+    await supabase.from("messages").insert({
+      created_at: new Date().toLocaleDateString(),
+      content: aiText,
+      chat_id: query.id,
+      author: character?.name,
+      isAI: true,
+    });
   };
 
   return (
@@ -95,6 +119,7 @@ const MessageInput = () => {
         onKeyDown={(e) => {
           if (e.key === "Enter") sendMessage();
         }}
+        disabled={sendingMessage}
         className="flex-1 py-4 text-white bg-transparent outline-none"
       />
 

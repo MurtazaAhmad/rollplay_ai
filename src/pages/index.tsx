@@ -43,6 +43,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   const { data: chatData } = await supabase
     .from("chats")
     .select()
+    .order("created_at", { ascending: false })
     .eq("user_id", session.user.id);
 
   const res = chatData?.map(async (data) => {

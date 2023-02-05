@@ -3,15 +3,6 @@ import { GetServerSidePropsContext } from "next";
 import Chat from "@/components/Chat";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 
-type Message = {
-  content: string;
-  author: string;
-  created_at?: Date;
-  isAI: boolean;
-  id: number;
-  chat_id: number;
-};
-
 type Props = {
   messages: Message[];
 };
@@ -54,6 +45,15 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     .eq("id", chatId)
     .single();
 
+  // if chatroom doesn't exist return to home
+  if (!chatData)
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+
   // if the user's is not propietary of the chat, return to home
   if (chatData && chatData.user_id !== session.user.id)
     return {
@@ -63,11 +63,13 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
       },
     };
 
-  // get messages from chat
+  // get last 50 messages from chat
   const { data: messages }: { data: Message[] | null } = await supabase
     .from("messages")
     .select()
-    .eq("chat_id", chatId);
+    .eq("chat_id", chatId)
+    .order("timestamp", { ascending: false })
+    .limit(50);
 
   if (!messages) {
     return {

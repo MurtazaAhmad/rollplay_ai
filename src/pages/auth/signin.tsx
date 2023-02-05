@@ -35,7 +35,8 @@ const SignIn = () => {
       toast.error(error.message, {
         id: toastId,
       });
-
+      
+      setLogging(false);
       return;
     }
 

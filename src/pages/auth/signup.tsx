@@ -39,6 +39,7 @@ const SignUp = () => {
         id: toastId,
       });
 
+      setRegistering(false);
       return;
     }
 

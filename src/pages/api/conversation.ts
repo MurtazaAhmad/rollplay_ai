@@ -31,40 +31,61 @@ type Data = {
 type Body = {
   input: string;
   ai_id: number;
+  chat_id: number;
 };
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  const { input, ai_id } = req.body as Body;
+  const { ai_id, chat_id } = req.body as Body;
 
+  // get 15 last messages to give more context.
+  const { data: messages } = await supabase
+    .from("messages")
+    .select()
+    .eq("chat_id", chat_id)
+    .limit(15);
+
+  // character
   const { data: characterData } = await supabase
     .from("characters")
     .select()
     .eq("id", ai_id)
     .single();
 
+  const messageLine = messages?.map((message) => {
+    if (message.isAI) {
+      return `You: ${message.content}`;
+    }
+
+    return `User: ${message.content}`;
+  });
+
   const prompt = `
     You're going to generate a message as a character based on the following context.
-    
+    Send the best response based on the last messages context and your description.
+
     -
     Your name: ${characterData?.name}.
     Your gender: ${characterData?.gender}.
     Your age: ${characterData?.age}.
     Context: ${characterData?.context}
     -
-    User last message: ${input}
+    Last 15 messages of the chat:
+    ${messageLine?.join("\n")}
     -
-    Important: (Avoid breaklines at the beginning: "/\/n")
+    Don't repeat things that you've said in the last messages.
+
+    Your reponse:
   `;
 
   try {
     const { data } = await openai.createCompletion({
       model: "text-davinci-003",
       prompt: prompt,
-      temperature: 0.4,
-      max_tokens: 1024,
+      temperature: 0.8,
+      max_tokens: 1500,
     });
 
     res.status(200).json({ response: data.choices });
