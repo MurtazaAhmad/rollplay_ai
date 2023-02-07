@@ -65,6 +65,9 @@ export default async function handler(
   const prompt = `
     Role play as ${characterData?.name} who is ${characterData?.gender} gender with age of ${characterData?.age}. Background of this character includes the following:
     ${characterData?.context}
+
+    Last messages so you have more context:
+    ${messageLine?.join(' ')}
     
     Pretend that we are on a date trying to have sex. 
     Don't be too descriptive with your response and try to replicate real responses that ${characterData?.name} and women would say on dating apps. 
