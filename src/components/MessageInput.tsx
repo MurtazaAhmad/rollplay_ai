@@ -64,7 +64,7 @@ const MessageInput = () => {
       isAI: false,
     });
 
-    setSendingMessage(true);
+    setSendingMessage(false);
     setMessage("");
 
     // ai answer
@@ -119,7 +119,6 @@ const MessageInput = () => {
         onKeyDown={(e) => {
           if (e.key === "Enter") sendMessage();
         }}
-        disabled={sendingMessage}
         className="flex-1 py-4 text-white bg-transparent outline-none"
       />
 
