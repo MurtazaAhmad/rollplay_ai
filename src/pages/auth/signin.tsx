@@ -24,6 +24,26 @@ const SignIn = () => {
     setLogging(true);
 
     const toastId = toast.loading("Logging in...");
+    const emailRegxp = new RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g);
+
+    // handling empty values
+    if (credentials.email === "" || credentials.password === "") {
+      toast.error("Please, fill all the fields.", {
+        id: toastId,
+      });
+
+      setLogging(false);
+      return;
+    }
+
+    if (!emailRegxp.test(credentials.email)) {
+      toast.error("Enter a valid email.", {
+        id: toastId,
+      });
+
+      setLogging(false);
+      return;
+    }
 
     // loggin user
     const { error } = await supabaseClient.auth.signInWithPassword({
@@ -32,10 +52,10 @@ const SignIn = () => {
     });
 
     if (error) {
-      toast.error(error.message, {
+      toast.error("Email or password incorrect.", {
         id: toastId,
       });
-      
+
       setLogging(false);
       return;
     }

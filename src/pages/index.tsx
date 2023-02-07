@@ -54,9 +54,19 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
       .eq("id", data.ai_id)
       .single();
 
+    // get last message from chat
+    const { data: message }: { data: Message | null } = await supabase
+      .from("messages")
+      .select()
+      .limit(1)
+      .eq("chat_id", data.id)
+      .order("timestamp", { ascending: false })
+      .single();
+
     return {
       ai,
       chat_id: data.id,
+      last_message: message,
     };
   });
 

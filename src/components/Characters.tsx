@@ -7,6 +7,12 @@ type Props = {
 };
 
 const Characters: FC<Props> = ({ chats }) => {
+  const formatDate = (date: string) => {
+    return new Intl.DateTimeFormat("en-US", {
+      dateStyle: "medium",
+    }).format(new Date(date));
+  };
+
   return (
     <section className="px-4 my-12">
       <article>
@@ -32,7 +38,20 @@ const Characters: FC<Props> = ({ chats }) => {
                 className="block w-full p-2 transition border rounded-md hover:border-black"
               >
                 <h3 className="font-bold">{chat.ai.name}</h3>
-                <p className="text-sm">👋 Say hello!</p>
+                {/* showing last message if exists */}
+                {chat.last_message ? (
+                  <div className="text-sm">
+                    <p className="truncate">
+                      {!chat.last_message.isAI && "You: "}
+                      {chat.last_message.content}
+                      </p>
+                    <p className="mt-1 text-xs text-gray-500">
+                      {formatDate(chat.last_message.created_at)}
+                    </p>
+                  </div>
+                ) : (
+                  <p className="text-sm">👋 Say hello!</p>
+                )}
               </Link>
             </li>
           ))}

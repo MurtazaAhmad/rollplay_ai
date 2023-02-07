@@ -21,7 +21,7 @@ const UserMenu = () => {
       <Menu.Button>
         <UserCircleIcon className="w-7 h-7" />
       </Menu.Button>
-      <Menu.Items className="absolute right-0 p-2 space-y-4 bg-white border rounded-md shadow-md w-max">
+      <Menu.Items className="absolute right-0 z-50 p-2 space-y-4 bg-white border rounded-md shadow-md min-w-[140px]">
 
         <Menu.Item>
           <p>Hello, {user?.name}</p>

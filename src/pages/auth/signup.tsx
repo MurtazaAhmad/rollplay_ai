@@ -26,8 +26,28 @@ const SignUp = () => {
     setRegistering(true);
 
     const toastId = toast.loading("Registering user...");
+    const emailRegxp = new RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g);
 
-    // registering usere
+    // handling empty values
+    if (credentials.name === "" || credentials.email === "" || credentials.password === "") {
+      toast.error("Please, fill all the fields.", {
+        id: toastId,
+      });
+
+      setRegistering(false);
+      return;
+    }
+
+    if (!emailRegxp.test(credentials.email)) {
+      toast.error("Enter a valid email.", {
+        id: toastId,
+      });
+
+      setRegistering(false);
+      return;
+    }
+
+    // registering user
     const { error } = await supabaseClient.auth.signUp({
       email: credentials.email,
       password: credentials.password,
