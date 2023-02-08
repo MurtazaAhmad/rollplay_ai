@@ -41,7 +41,7 @@ const Messages: FC = () => {
   }, [isAIAnswering]);
 
   const checkIfDateIsToday = (date: string) => {
-    const today = new Date().toLocaleDateString();
+    const today = new Date()
     return new Date(date).getDay() === new Date(today).getDay();
   };
 

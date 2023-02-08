@@ -46,7 +46,7 @@ const Characters: FC<Props> = ({ chats }) => {
                       {chat.last_message.content}
                       </p>
                     <p className="mt-1 text-xs text-gray-500">
-                      {formatDate(chat.last_message.created_at)}
+                      {formatDate(chat.last_message.timestamp)}
                     </p>
                   </div>
                 ) : (

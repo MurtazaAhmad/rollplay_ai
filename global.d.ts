@@ -1,7 +1,7 @@
 type Message = {
   content: string;
   author: string;
-  created_at?: string;
+  timestamp?: Date;
   isAI: boolean;
   id?: number;
   chat_id: number;

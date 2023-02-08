@@ -48,8 +48,8 @@ const MessageInput = () => {
       author: user!.name,
       content: message,
       chat_id: 2,
-      created_at: new Date().toLocaleDateString(),
       isAI: false,
+      timestamp: new Date(),
     };
 
     messages.unshift(newMessage);
@@ -57,7 +57,6 @@ const MessageInput = () => {
 
     // save own message
     await supabase.from("messages").insert({
-      created_at: new Date().toLocaleDateString(),
       content: message,
       chat_id: query.id,
       author: user?.name,
@@ -92,8 +91,8 @@ const MessageInput = () => {
       author: character?.name || "",
       content: aiText,
       chat_id: parseInt(query.id as string),
-      created_at: new Date().toLocaleDateString(),
       isAI: true,
+      timestamp: new Date(),
     };
 
     setIsAIAnswering(false);
@@ -101,7 +100,6 @@ const MessageInput = () => {
 
     // saving ai message
     await supabase.from("messages").insert({
-      created_at: new Date().toLocaleDateString(),
       content: aiText,
       chat_id: query.id,
       author: character?.name,
