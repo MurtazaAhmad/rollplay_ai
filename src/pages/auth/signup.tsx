@@ -3,6 +3,8 @@ import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
 import { useRouter } from "next/router";
 import { toast } from "react-hot-toast";
+import Navbar from "@/components/Navbar";
+import { EnvelopeIcon, KeyIcon, UserIcon } from "@heroicons/react/24/outline";
 
 const SignUp = () => {
   const supabaseClient = useSupabaseClient();
@@ -29,7 +31,11 @@ const SignUp = () => {
     const emailRegxp = new RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g);
 
     // handling empty values
-    if (credentials.name === "" || credentials.email === "" || credentials.password === "") {
+    if (
+      credentials.name === "" ||
+      credentials.email === "" ||
+      credentials.password === ""
+    ) {
       toast.error("Please, fill all the fields.", {
         id: toastId,
       });
@@ -68,51 +74,67 @@ const SignUp = () => {
     });
 
     setRegistering(false);
-    // redirect to home
-    router.replace("/");
+    // redirect to chat home
+    router.replace("/chat");
   };
 
   return (
-    <main className="grid h-screen bg-dark place-items-center">
-      <section className="text-center text-white w-[90%] md:max-w-md">
-        <h1 className="text-3xl font-bold">Create an account</h1>
+    <main className="bg-black bg-cover bg-girl">
+      <Navbar />
 
-        <form className="my-8 space-y-4" onSubmit={handleRegister}>
-          <input
-            type="text"
-            placeholder="Enter your name..."
-            name="name"
-            value={credentials.name}
-            onChange={handleChange}
-            className="w-full px-4 py-2 text-white rounded-full outline-none bg-slate-800"
-          />
+      <div className="grid h-[calc(100vh-8px)] place-items-center">
+        <section className="text-white w-[90%] md:max-w-md">
+          <h1 className="text-3xl font-bold">Create an account</h1>
 
-          <input
-            type="email"
-            placeholder="Enter your email..."
-            name="email"
-            value={credentials.email}
-            onChange={handleChange}
-            className="w-full px-4 py-2 text-white rounded-full outline-none bg-slate-800"
-          />
+          <form className="my-8 space-y-4" onSubmit={handleRegister}>
+            <div className="relative">
+              <input
+                type="email"
+                placeholder="Enter your name"
+                name="name"
+                value={credentials.name}
+                onChange={handleChange}
+                className="w-full p-4 text-white bg-transparent border-b border-white outline-none"
+              />
 
-          <input
-            type="password"
-            placeholder="Enter your password..."
-            name="password"
-            value={credentials.password}
-            onChange={handleChange}
-            className="w-full px-4 py-2 text-white rounded-full outline-none bg-slate-800"
-          />
+              <UserIcon className="absolute w-6 h-6 text-white right-4 top-[30%]" />
+            </div>
 
-          <button
-            disabled={registering}
-            className="w-full px-6 py-2 !mt-6 bg-white rounded-full text-dark disabled:opacity-50"
-          >
-            Sign Up
-          </button>
-        </form>
-      </section>
+            <div className="relative">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                name="email"
+                value={credentials.email}
+                onChange={handleChange}
+                className="w-full p-4 text-white bg-transparent border-b border-white outline-none"
+              />
+
+              <EnvelopeIcon className="absolute w-6 h-6 text-white right-4 top-[30%]" />
+            </div>
+
+            <div className="relative">
+              <input
+                type="password"
+                placeholder="Enter your password..."
+                name="password"
+                value={credentials.password}
+                onChange={handleChange}
+                className="w-full p-4 text-white bg-transparent border-b border-white outline-none"
+              />
+
+              <KeyIcon className="absolute w-6 h-6 text-white right-4 top-[30%]" />
+            </div>
+
+            <button
+              disabled={registering}
+              className="!mt-16 w-full px-6 py-2 !mt-6 bg-white rounded-full text-dark disabled:opacity-50"
+            >
+              Sign Up
+            </button>
+          </form>
+        </section>
+      </div>
     </main>
   );
 };

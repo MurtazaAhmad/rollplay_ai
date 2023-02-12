@@ -9,7 +9,7 @@ type Props = {
 
 const ChatIndex: FC<Props> = ({ messages }) => {
   return (
-    <main>
+    <main className="bg-fixed bg-black bg-cover bg-girl">
       <Chat messages={messages} />
     </main>
   );

@@ -1,4 +1,7 @@
 import "@/styles/globals.css";
+import "swiper/css";
+import "swiper/css/pagination";
+
 import { useState } from "react";
 import type { AppProps } from "next/app";
 
@@ -43,7 +46,16 @@ export default function App({
         <Component {...pageProps} />
       </AuthContextProvider>
 
-      <Toaster position="bottom-center" />
+      <Toaster
+        position="bottom-center"
+        toastOptions={{
+          style: {
+            background: "#111",
+            color: "#fff",
+            textAlign: "center",
+          },
+        }}
+      />
     </SessionContextProvider>
   );
 }

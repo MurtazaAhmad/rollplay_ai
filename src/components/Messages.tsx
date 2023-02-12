@@ -41,7 +41,7 @@ const Messages: FC = () => {
   }, [isAIAnswering]);
 
   const checkIfDateIsToday = (date: string) => {
-    const today = new Date()
+    const today = new Date();
     return new Date(date).getDay() === new Date(today).getDay();
   };
 
@@ -102,10 +102,10 @@ const Messages: FC = () => {
                     return (
                       <div
                         key={message.id || fallbackId}
-                        className={`p-2 bg-white border rounded-md w-max max-w-[85%] ${
+                        className={`p-2 bg-dark text-white rounded-md rounded-tl-none w-max max-w-[85%] ${
                           isAI
                             ? "self-start"
-                            : "!bg-dark text-white self-end ml-auto"
+                            : "!bg-main text-dark self-end ml-auto !rounded-md !rounded-tr-none"
                         }`}
                       >
                         <p className="break-words whitespace-pre-wrap">

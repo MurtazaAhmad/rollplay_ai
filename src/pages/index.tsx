@@ -1,82 +1,81 @@
-import { GetServerSidePropsContext } from "next";
-import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
-
 import Navbar from "@/components/Navbar";
-import Characters from "@/components/Characters";
 
-type Props = {
-  chats: any[];
-};
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
+import Link from "next/link";
+import { ArrowRightIcon } from "@heroicons/react/24/outline";
 
-export default function Home({ chats }: Props) {
+const testimonials = [
+  {
+    id: 1,
+    content:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam id incidunt quos numquam iure quae illum voluptatibus consequuntur quis nostrum!",
+  },
+  {
+    id: 2,
+    content:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam id incidunt quos numquam iure quae illum voluptatibus consequuntur quis nostrum!",
+  },
+  {
+    id: 3,
+    content:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam id incidunt quos numquam iure quae illum voluptatibus consequuntur quis nostrum!",
+  },
+];
+
+const Index = () => {
   return (
-    <main className="min-h-screen">
-      <Navbar />
+    <main className="relative h-screen bg-black bg-cover bg-girl w-[calc(100vw-12px)]">
+      {/* <Navbar /> */}
 
-      <Characters chats={chats} />
+      <section className="flex items-center justify-center h-full w-[70%] mx-auto">
+        <section className="grid md:grid-cols-[40%_20px_1fr] md:h-[300px] gap-4">
+          <article className="text-white">
+            <img
+              src="/assets/logo-white.png"
+              alt="Rollplay logo"
+              className="object-contain w-24 aspect-square"
+            />
+
+            <div className="mt-4 md:text-right">
+              <h1 className="text-2xl md:text-6xl text-main">
+                Rollplay.<span className="text-white">ai</span>
+              </h1>
+              <p className="mt-4 text-xl">Virtual AI Friend</p>
+            </div>
+          </article>
+
+          {/* line separator */}
+          <div className="w-0.5 h-full mx-2 bg-white relative hidden md:block">
+            {/* dot */}
+            <div className="absolute top-0 w-2 h-2 bg-white -left-[142%] rounded-full"></div>
+          </div>
+
+          <Swiper
+            spaceBetween={50}
+            slidesPerView={1}
+            modules={[Pagination]}
+            pagination={{ clickable: true }}
+            className="w-full py-4 text-white"
+          >
+            {testimonials.map((testimonial) => (
+              <SwiperSlide key={testimonial.id} className="md:!mt-12">
+                <p className="md:w-[80%] text-gray-400 md:text-2xl">
+                  {testimonial.content}
+                </p>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </section>
+      </section>
+
+      <div className="absolute px-4 py-12 mr-2 bg-white rounded-l-full -right-2 bottom-20">
+        <Link href="/chat" className="block px-4 ml-2 rounded-full bg-main">
+          <ArrowRightIcon className="w-10 h-10 text-white" />
+        </Link>
+      </div>
     </main>
   );
-}
+};
 
-export async function getServerSideProps(ctx: GetServerSidePropsContext) {
-  // Create authenticated Supabase Client
-  const supabase = createServerSupabaseClient(ctx, {
-    supabaseKey: process.env.NEXT_PUBLIC_SUPABASE_KEY,
-    supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL,
-  });
-
-  // Check if we have a session
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-
-  // if there's no session, redirect to auth
-  if (!session)
-    return {
-      redirect: {
-        destination: "/auth",
-        permanent: false,
-      },
-    };
-
-  // Getting chatrooms
-  const { data: chatData } = await supabase
-    .from("chats")
-    .select()
-    .order("created_at", { ascending: false })
-    .eq("user_id", session.user.id);
-
-  const res = chatData?.map(async (data) => {
-    const { data: ai } = await supabase
-      .from("characters")
-      .select()
-      .limit(1)
-      .eq("id", data.ai_id)
-      .single();
-
-    // get last message from chat
-    const { data: message }: { data: Message | null } = await supabase
-      .from("messages")
-      .select()
-      .limit(1)
-      .eq("chat_id", data.id)
-      .order("timestamp", { ascending: false })
-      .single();
-
-    return {
-      ai,
-      chat_id: data.id,
-      last_message: message,
-    };
-  });
-
-  const chats = await Promise.all(res as []);
-
-  return {
-    props: {
-      initialSession: session,
-      user: session.user,
-      chats,
-    },
-  };
-}
+export default Index;

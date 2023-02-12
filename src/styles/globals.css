@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+html,
+body {
+  @apply bg-white;
+}
+
 /* Width */
 .scrollbar::-webkit-scrollbar {
   @apply w-1;
@@ -20,4 +25,22 @@
 /* Handle on hover */
 .scrollbar::-webkit-scrollbar-thumb:hover {
   @apply bg-gray-700;
+}
+
+/* slider pagination */
+
+.swiper {
+  @apply h-[200px] md:h-auto;
+}
+
+.swiper-pagination {
+  @apply !text-left;
+}
+
+.swiper-pagination-bullet {
+  @apply !bg-gray-200;
+}
+
+.swiper-pagination-bullet-active {
+  @apply !bg-main;
 }

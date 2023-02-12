@@ -12,7 +12,11 @@ module.exports = {
       },
       colors: {
         dark: "#111",
+        main: '#FD79A8'
       },
+      backgroundImage: {
+        girl: "url('/assets/bg.png')"
+      }
     },
   },
   plugins: [require("@headlessui/tailwindcss")({ prefix: "ui" })],

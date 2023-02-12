@@ -108,7 +108,7 @@ const MessageInput = () => {
   };
 
   return (
-    <div className="flex items-center px-6 bg-dark">
+    <div className="flex items-center px-6 bg-black/50">
       <input
         type="text"
         placeholder="Type a message..."

@@ -1,7 +1,7 @@
-import React from "react";
 import Link from "next/link";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/router";
+import Navbar from "@/components/Navbar";
 
 const Auth = () => {
   const supabase = useSupabaseClient();
@@ -21,33 +21,36 @@ const Auth = () => {
   };
 
   return (
-    <main className="grid h-screen bg-dark place-items-center">
-      <section className="text-center text-white w-[90%] md:max-w-md">
-        <h1 className="text-2xl font-bold">Rollplay.ai</h1>
-        <p className="my-4 text-sm">Your Personal AI Friend</p>
+    <main className="bg-black bg-cover bg-girl">
+      <Navbar />
 
-        <article className="flex flex-col items-center justify-center mt-12 space-y-4">
-          <Link
-            href="/auth/signin"
-            className="w-full px-6 py-2 bg-white rounded-full text-dark"
-          >
-            Continue with Email
-          </Link>
+      <div className="grid h-[calc(100vh-8px)] place-items-center">
+        <section className="text-center text-white w-[90%] md:max-w-md">
+          <h1 className="text-2xl font-bold">Start chatting right now!</h1>
 
-          <Link href="/auth/signup" className="text-white">
-            Create account with Email
-          </Link>
+          <article className="flex flex-col items-center justify-center mt-12 space-y-4">
+            <Link
+              href="/auth/signin"
+              className="w-full px-6 py-4 text-white border-2 rounded-full bg-dark border-main"
+            >
+              Login with Email
+            </Link>
 
-          <p className="text-sm text-gray-500">or</p>
+            <Link href="/auth/signup" className="text-white">
+              Register with Email
+            </Link>
 
-          <button
-            onClick={handleGoogleAuth}
-            className="w-full px-6 py-2 bg-blue-500 rounded-full"
-          >
-            Continue with Google
-          </button>
-        </article>
-      </section>
+            <p className="text-sm text-gray-500">or</p>
+
+            <button
+              onClick={handleGoogleAuth}
+              className="w-full px-6 py-4 bg-blue-500 rounded-full"
+            >
+              Continue with Google
+            </button>
+          </article>
+        </section>
+      </div>
     </main>
   );
 };

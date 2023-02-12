@@ -2,6 +2,8 @@ import { FormEvent, useState } from "react";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/router";
 import { toast } from "react-hot-toast";
+import Navbar from "@/components/Navbar";
+import { EnvelopeIcon, KeyIcon } from "@heroicons/react/24/outline";
 
 const SignIn = () => {
   const supabaseClient = useSupabaseClient();
@@ -65,42 +67,54 @@ const SignIn = () => {
     });
 
     setLogging(false);
-    // redirect to home
-    router.replace("/");
+
+    // redirect to chat home
+    router.replace("/chat");
   };
 
   return (
-    <main className="grid h-screen bg-dark place-items-center">
-      <section className="text-center text-white w-[90%] md:max-w-md">
-        <h1 className="text-3xl font-bold">Welcome Back</h1>
+    <main className="bg-black bg-cover bg-girl">
+      <Navbar />
 
-        <form className="my-8 space-y-4" onSubmit={handleLogin}>
-          <input
-            type="email"
-            placeholder="Enter your email..."
-            name="email"
-            value={credentials.email}
-            onChange={handleChange}
-            className="w-full px-4 py-2 text-white rounded-full outline-none bg-slate-800"
-          />
+      <div className="grid h-[calc(100vh-8px)] place-items-center">
+        <section className="text-white w-[90%] md:max-w-md">
+          <h1 className="text-3xl font-bold">Welcome Back</h1>
 
-          <input
-            type="password"
-            placeholder="Enter your password..."
-            name="password"
-            value={credentials.password}
-            onChange={handleChange}
-            className="w-full px-4 py-2 text-white rounded-full outline-none bg-slate-800"
-          />
+          <form className="my-8 space-y-4" onSubmit={handleLogin}>
+            <div className="relative">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                name="email"
+                value={credentials.email}
+                onChange={handleChange}
+                className="w-full p-4 text-white bg-transparent border-b border-white outline-none"
+              />
 
-          <button
-            disabled={logging}
-            className="w-full px-6 py-2 !mt-6 bg-white rounded-full text-dark disabled:opacity-50"
-          >
-            Log In
-          </button>
-        </form>
-      </section>
+              <EnvelopeIcon className="absolute w-6 h-6 text-white right-4 top-[30%]" />
+            </div>
+            <div className="relative">
+              <input
+                type="password"
+                placeholder="Enter your password"
+                name="password"
+                value={credentials.password}
+                onChange={handleChange}
+                className="w-full p-4 text-white bg-transparent border-b border-white outline-none"
+              />
+
+              <KeyIcon className="absolute w-6 h-6 text-white right-4 top-[30%]" />
+            </div>
+
+            <button
+              disabled={logging}
+              className="!mt-16 w-full px-6 py-4 text-white border-2 rounded-full bg-dark border-main"
+            >
+              Log In
+            </button>
+          </form>
+        </section>
+      </div>
     </main>
   );
 };

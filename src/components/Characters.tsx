@@ -8,17 +8,19 @@ type Props = {
 
 const Characters: FC<Props> = ({ chats }) => {
   const formatDate = (date: string) => {
-    return new Intl.DateTimeFormat("en-US", {
-      dateStyle: "medium",
-    }).format(new Date(date));
+    const dateToFormat = new Date(date).getDate() - new Date().getDate();
+
+    return new Intl.RelativeTimeFormat("en-US", {
+      numeric: "auto",
+    }).format(dateToFormat, "day");
   };
 
   return (
-    <section className="px-4 my-12">
+    <section className="px-4 mt-32">
       <article>
         <Link
           href="/new/character"
-          className="flex items-center justify-center w-full py-6 transition border rounded-md hover:shadow-md hover:-translate-y-1"
+          className="flex items-center justify-center w-full py-6 text-white transition border-2 rounded-md bg-dark border-main hover:shadow-md hover:-translate-y-1"
         >
           <PlusIcon className="w-5 h-5 mr-2" />
           <p>New Character</p>
@@ -27,7 +29,7 @@ const Characters: FC<Props> = ({ chats }) => {
 
       <article className="my-12">
         <header>
-          <h3 className="font-bold">Chatrooms</h3>
+          <h3 className="text-xl font-bold text-white md:text-2xl">My chats</h3>
         </header>
 
         <ul className="mt-6 space-y-4">
@@ -35,23 +37,29 @@ const Characters: FC<Props> = ({ chats }) => {
             <li key={chat.chat_id}>
               <Link
                 href={`/chat/${chat.chat_id}`}
-                className="block w-full p-2 transition border rounded-md hover:border-black"
+                className="flex items-center justify-between w-full p-4 text-white transition rounded-2xl bg-main/20 hover:bg-main/50"
               >
-                <h3 className="font-bold">{chat.ai.name}</h3>
-                {/* showing last message if exists */}
-                {chat.last_message ? (
-                  <div className="text-sm">
-                    <p className="truncate">
-                      {!chat.last_message.isAI && "You: "}
-                      {chat.last_message.content}
-                      </p>
-                    <p className="mt-1 text-xs text-gray-500">
-                      {formatDate(chat.last_message.timestamp)}
+                <div>
+                  <h3 className="font-bold">{chat.ai.name}</h3>
+
+                  {/* showing last message if exists */}
+                  {chat.last_message ? (
+                    <p className="text-sm">
+                      Last message:
+                      <span className="text-main">
+                        {" "}
+                        {formatDate(chat.last_message.timestamp)}
+                      </span>
                     </p>
-                  </div>
-                ) : (
-                  <p className="text-sm">👋 Say hello!</p>
-                )}
+                  ) : (
+                    <p className="text-sm">👋 Say hello!</p>
+                  )}
+                </div>
+
+                <div className="relative px-6 py-1 bg-white rounded-full text-dark">
+                  <p>{chat.messages_count}</p>
+                  <div className="absolute w-2 h-2 transform rotate-45 bg-white"></div>
+                </div>
               </Link>
             </li>
           ))}

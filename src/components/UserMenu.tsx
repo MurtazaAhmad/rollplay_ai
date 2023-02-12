@@ -17,14 +17,13 @@ const UserMenu = () => {
   };
 
   return (
-    <Menu as="div" className="relative">
+    <Menu as="div" className="relative m-8">
       <Menu.Button>
-        <UserCircleIcon className="w-7 h-7" />
+        <UserCircleIcon className="text-white w-7 h-7" />
       </Menu.Button>
-      <Menu.Items className="absolute right-0 z-50 p-2 space-y-4 bg-white border rounded-md shadow-md min-w-[140px]">
-
+      <Menu.Items className="absolute right-0 z-50 p-2 space-y-4 bg-white border border-main rounded-md shadow-md min-w-[160px] bg-dark">
         <Menu.Item>
-          <p>Hello, {user?.name}</p>
+          <p className="text-white">Hello, {user?.name}</p>
         </Menu.Item>
         <Menu.Item>
           <button

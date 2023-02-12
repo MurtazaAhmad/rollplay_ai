@@ -81,37 +81,38 @@ const NewCharacter = () => {
   };
 
   return (
-    <main>
+    <main className="bg-black bg-cover bg-girl">
       <Navbar />
 
       <section>
-        <header className="my-12 text-center">
-          <h1 className="text-xl font-bold">Create new character.</h1>
+        <header className="px-6 my-12 text-left">
+          <h1 className="text-xl font-bold text-white">
+            Create new character to chat.
+          </h1>
         </header>
 
         <form
-          className="w-[90%] mx-auto space-y-6"
+          className="w-[90%] mx-auto space-y-6 pb-12"
           onSubmit={handleCreateCharacter}
         >
           <label className="block">
-            <p className="mb-2">Name</p>
             <input
-              type="text"
-              className="w-full p-2 bg-gray-100 rounded-md"
-              placeholder="Mitsuki"
-              value={character.name}
+              type="email"
+              placeholder="Enter character name"
               name="name"
+              value={character.name}
               onChange={handleChange}
+              className="w-full p-4 text-white bg-transparent border-b border-white outline-none"
             />
           </label>
 
           <div className="grid grid-cols-2 gap-5">
             <label className="block">
-              <p className="mb-2">Age</p>
+              <p className="mb-2 text-white">Age</p>
               <input
                 type="number"
                 minLength={18}
-                className="w-full p-2 bg-gray-100 rounded-md appeareance-none"
+                className="w-full p-4 text-white bg-transparent border-b border-white outline-none"
                 value={character.age}
                 name="age"
                 onChange={handleChange}
@@ -119,16 +120,22 @@ const NewCharacter = () => {
             </label>
 
             <label className="block">
-              <p className="mb-2">Gender</p>
+              <p className="mb-2 text-white">Gender</p>
               <select
-                className="w-full p-2 bg-gray-100 rounded-md appeareance-none"
+                className="w-full p-4 text-white bg-transparent border-b border-white outline-none"
                 value={character.gender}
                 name="gender"
                 onChange={handleChange}
               >
-                <option value="Not Specified">Not Specified</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
+                <option value="Not Specified" className="text-black">
+                  Not Specified
+                </option>
+                <option value="Male" className="text-black">
+                  Male
+                </option>
+                <option value="Female" className="text-black">
+                  Female
+                </option>
               </select>
             </label>
           </div>
@@ -136,7 +143,7 @@ const NewCharacter = () => {
           <label className="block">
             <p className="mb-2">Description (context)</p>
             <textarea
-              className="w-full p-2 bg-gray-100 rounded-md appeareance-none min-h-[200px] resize-none"
+              className="w-full p-4 text-white bg-transparent border-b border-white outline-none min-h-[200px] resize-none"
               placeholder="She comes for planet XYZ..."
               value={character.context}
               name="context"
