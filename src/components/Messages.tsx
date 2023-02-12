@@ -124,11 +124,11 @@ const Messages: FC = () => {
       {/* Answering animation */}
       {isAIAnswering && (
         <div
-          className={`px-2 py-4 bg-white border rounded-md w-max max-w-[85%] self-start flex items-center space-x-1`}
+          className={`p-4 bg-dark text-white rounded-md rounded-tl-none w-max max-w-[85%] self-start flex items-center space-x-1`}
         >
-          <div className="w-1.5 bg-gray-400 rounded-full aspect-square animate-bounce"></div>
-          <div className="w-1.5 delay-100 bg-gray-400 rounded-full aspect-square animate-bounce"></div>
-          <div className="w-1.5 delay-200 bg-gray-400 rounded-full aspect-square animate-bounce"></div>
+          <div className="w-1.5 bg-main rounded-full aspect-square animate-bounce"></div>
+          <div className="w-1.5 delay-100 bg-main rounded-full aspect-square animate-bounce"></div>
+          <div className="w-1.5 delay-200 bg-main rounded-full aspect-square animate-bounce"></div>
         </div>
       )}
 

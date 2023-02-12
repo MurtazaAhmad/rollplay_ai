@@ -49,7 +49,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   if (!chatData)
     return {
       redirect: {
-        destination: "/",
+        destination: "/chat",
         permanent: false,
       },
     };
@@ -58,7 +58,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   if (chatData && chatData.user_id !== session.user.id)
     return {
       redirect: {
-        destination: "/",
+        destination: "/chat",
         permanent: false,
       },
     };
