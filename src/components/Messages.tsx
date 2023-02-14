@@ -7,6 +7,7 @@ import orderChatsByDate from "@/utils/orderChatsByDate";
 
 import { v4 as uuid } from "uuid";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { ChevronLeftIcon } from "@heroicons/react/24/outline";
 
 import LoadingDots from "@/ui/LoadingDots";
 
@@ -15,7 +16,7 @@ const Messages: FC = () => {
   const dummy = useRef<any>(null);
   const { messages, isAIAnswering, setMessages } = useMessagesStore();
   const supabase = useSupabaseClient();
-  const { query } = useRouter();
+  const { query, back } = useRouter();
 
   const [countMessages, setCountMessages] = useState(0);
 
@@ -39,6 +40,10 @@ const Messages: FC = () => {
   useEffect(() => {
     dummy.current.scrollIntoView();
   }, [isAIAnswering]);
+
+  const goBack = () => {
+    back();
+  };
 
   const checkIfDateIsToday = (date: string) => {
     const today = new Date();
@@ -69,7 +74,15 @@ const Messages: FC = () => {
   };
 
   return (
-    <div className="px-6 py-4 ">
+    <div className="relative px-6 py-4 ">
+      {/* back button */}
+      <button
+        onClick={goBack}
+        className="fixed z-50 p-1 rounded-md left-5 top-5 bg-main/50 backdrop-blur-sm"
+      >
+        <ChevronLeftIcon className="w-5 h-5 text-white" />
+      </button>
+
       {/* vertical scroll fix */}
       <div className="flex-1"></div>
 

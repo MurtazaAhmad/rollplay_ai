@@ -19,7 +19,7 @@ body {
 
 /* Handle */
 .scrollbar::-webkit-scrollbar-thumb {
-  @apply bg-gray-600;
+  @apply bg-main;
 }
 
 /* Handle on hover */

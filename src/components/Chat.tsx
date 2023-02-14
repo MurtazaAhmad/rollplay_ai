@@ -3,7 +3,6 @@ import MessageInput from "@/components/MessageInput";
 
 import { FC, useEffect } from "react";
 import useMessagesStore from "@/stores/messages";
-import { ChevronLeftIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/router";
 
 type Props = {
@@ -24,14 +23,7 @@ const Chat: FC<Props> = ({ messages }) => {
 
   return (
     <section className="relative flex flex-col h-screen">
-      {/* back button */}
-      <button
-        onClick={goBack}
-        className="absolute z-50 p-1 rounded-md left-5 top-5 bg-main/50 backdrop-blur-sm"
-      >
-        <ChevronLeftIcon className="w-5 h-5 text-white" />
-      </button>
-
+     
       {/* chat */}
 
       {/* chat container */}
