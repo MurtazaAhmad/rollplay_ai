@@ -76,8 +76,9 @@ const NewCharacter = () => {
     }
 
     toast.success("Character created", { id: toastId });
-
-    router.push("/");
+  
+    // redirect to chat
+    router.push("/chat");
   };
 
   return (
