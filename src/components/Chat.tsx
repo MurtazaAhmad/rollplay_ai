@@ -27,7 +27,7 @@ const Chat: FC<Props> = ({ messages }) => {
       {/* back button */}
       <button
         onClick={goBack}
-        className="absolute p-1 rounded-md left-5 top-5 bg-main/50 backdrop-blur-sm"
+        className="absolute z-50 p-1 rounded-md left-5 top-5 bg-main/50 backdrop-blur-sm"
       >
         <ChevronLeftIcon className="w-5 h-5 text-white" />
       </button>
