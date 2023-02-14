@@ -97,7 +97,7 @@ const NewCharacter = () => {
         >
           <label className="block">
             <input
-              type="email"
+              type="text"
               placeholder="Enter character name"
               name="name"
               value={character.name}
