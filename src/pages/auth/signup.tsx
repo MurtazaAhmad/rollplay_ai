@@ -89,7 +89,7 @@ const SignUp = () => {
           <form className="my-8 space-y-4" onSubmit={handleRegister}>
             <div className="relative">
               <input
-                type="email"
+                type="name"
                 placeholder="Enter your name"
                 name="name"
                 value={credentials.name}

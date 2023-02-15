@@ -41,7 +41,7 @@ const Messages: FC = () => {
     if (dummy.current)
       document.getElementById("scrollable-chat")!.scrollTop =
         dummy.current.offsetTop;
-  }, [isAIAnswering]);
+  }, [messages]);
 
   const goBack = () => {
     back();
