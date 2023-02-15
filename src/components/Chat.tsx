@@ -5,14 +5,14 @@ import { FC, useEffect } from "react";
 import useMessagesStore from "@/stores/messages";
 
 type Props = {
-  messages: Message[];
+  initialMessages: Message[];
 };
 
-const Chat: FC<Props> = ({ messages }) => {
-  const { setMessages } = useMessagesStore();
+const Chat: FC<Props> = ({ initialMessages }) => {
+  const { messages, setMessages } = useMessagesStore();
 
   useEffect(() => {
-    setMessages(messages);
+    setMessages(initialMessages);
   }, []);
 
   return (

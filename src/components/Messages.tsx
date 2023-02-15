@@ -8,6 +8,7 @@ import orderChatsByDate from "@/utils/orderChatsByDate";
 import { v4 as uuid } from "uuid";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { ChevronLeftIcon } from "@heroicons/react/24/outline";
+import scrollIntoView from "scroll-into-view";
 
 import LoadingDots from "@/ui/LoadingDots";
 
@@ -38,12 +39,8 @@ const Messages: FC = () => {
 
   // handling auto scroll
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (dummy.current) dummy.current.scrollIntoView();
-    }, 10);
-
-    return () => clearTimeout(timer);
-  }, [messages]);
+    if (dummy.current) scrollIntoView(dummy.current);
+  }, [messages, isAIAnswering]);
 
   const goBack = () => {
     back();

@@ -1,3 +1,5 @@
+declare module 'scroll-into-view';
+
 type Message = {
   content: string;
   author: string;
