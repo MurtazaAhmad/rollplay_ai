@@ -130,21 +130,21 @@ const Messages: FC = () => {
                   })
                   .reverse()}
               </div>
+
+              {/* Answering animation */}
+              {isAIAnswering && (
+                <div
+                  className={`p-4 bg-dark text-white rounded-md rounded-tl-none w-max max-w-[85%] self-start flex items-center space-x-1`}
+                >
+                  <div className="w-1.5 bg-main rounded-full aspect-square animate-bounce"></div>
+                  <div className="w-1.5 delay-100 bg-main rounded-full aspect-square animate-bounce"></div>
+                  <div className="w-1.5 delay-200 bg-main rounded-full aspect-square animate-bounce"></div>
+                </div>
+              )}
             </div>
           );
         })}
       </InfiniteScroll>
-
-      {/* Answering animation */}
-      {isAIAnswering && (
-        <div
-          className={`p-4 bg-dark text-white rounded-md rounded-tl-none w-max max-w-[85%] self-start flex items-center space-x-1`}
-        >
-          <div className="w-1.5 bg-main rounded-full aspect-square animate-bounce"></div>
-          <div className="w-1.5 delay-100 bg-main rounded-full aspect-square animate-bounce"></div>
-          <div className="w-1.5 delay-200 bg-main rounded-full aspect-square animate-bounce"></div>
-        </div>
-      )}
 
       {messages.length === 0 && (
         <p className="text-xs text-center text-gray-400">
