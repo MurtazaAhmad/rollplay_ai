@@ -38,9 +38,11 @@ const Messages: FC = () => {
 
   // handling auto scroll
   useEffect(() => {
-    if (dummy.current)
-      document.getElementById("scrollable-chat")!.scrollTop =
-        dummy.current.offsetTop;
+    const timer = setTimeout(() => {
+      if (dummy.current) dummy.current.scrollIntoView();
+    }, 10);
+
+    return () => clearTimeout(timer);
   }, [messages]);
 
   const goBack = () => {
