@@ -40,7 +40,7 @@ const Messages: FC = () => {
   // handling auto scroll
   useEffect(() => {
     if (dummy.current) scrollIntoView(dummy.current);
-  }, [messages, isAIAnswering]);
+  }, [messages]);
 
   const goBack = () => {
     back();
@@ -141,6 +141,9 @@ const Messages: FC = () => {
                   <div className="w-1.5 delay-200 bg-main rounded-full aspect-square animate-bounce"></div>
                 </div>
               )}
+
+              {/* vertical scroll fix */}
+              <span ref={dummy} className="pt-4"></span>
             </div>
           );
         })}
@@ -151,9 +154,6 @@ const Messages: FC = () => {
           Write your first message to start a conversation.
         </p>
       )}
-
-      {/* vertical scroll fix */}
-      <span ref={dummy} className="pt-4"></span>
     </div>
   );
 };
