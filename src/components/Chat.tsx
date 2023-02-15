@@ -3,7 +3,6 @@ import MessageInput from "@/components/MessageInput";
 
 import { FC, useEffect } from "react";
 import useMessagesStore from "@/stores/messages";
-import { useRouter } from "next/router";
 
 type Props = {
   messages: Message[];
@@ -11,19 +10,13 @@ type Props = {
 
 const Chat: FC<Props> = ({ messages }) => {
   const { setMessages } = useMessagesStore();
-  const { back } = useRouter();
 
   useEffect(() => {
     setMessages(messages);
   }, []);
 
-  const goBack = () => {
-    back();
-  };
-
   return (
     <section className="relative flex flex-col h-screen">
-     
       {/* chat */}
 
       {/* chat container */}

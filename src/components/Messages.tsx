@@ -13,7 +13,7 @@ import LoadingDots from "@/ui/LoadingDots";
 
 const Messages: FC = () => {
   // dummy ref to mantain vertical scroll
-  const dummy = useRef<any>(null);
+  const dummy = useRef<null | HTMLSpanElement>(null);
   const { messages, isAIAnswering, setMessages } = useMessagesStore();
   const supabase = useSupabaseClient();
   const { query, back } = useRouter();
@@ -38,7 +38,9 @@ const Messages: FC = () => {
 
   // handling auto scroll
   useEffect(() => {
-    dummy.current.scrollIntoView();
+    if (dummy.current)
+      document.getElementById("scrollable-chat")!.scrollTop =
+        dummy.current.offsetTop;
   }, [isAIAnswering]);
 
   const goBack = () => {
