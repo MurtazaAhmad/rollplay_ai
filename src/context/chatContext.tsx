@@ -47,10 +47,10 @@ const ChatContextProvider: FC<ContextProps> = ({
   useEffect(() => {
     const chatContainer = document.querySelector("#scrollable-chat") as HTMLDivElement;
 
-    if (dummy.current) {
+    if (dummy.current && !isAIAnswering) {
       chatContainer!.scrollTop = dummy.current.offsetTop - chatContainer!.offsetTop;
     }
-  }, [messages]);
+  }, [isAIAnswering]);
 
   const value = {
     messages,
