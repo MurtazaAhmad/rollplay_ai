@@ -59,6 +59,8 @@ const ChatContextProvider: FC<ContextProps> = ({
 
     chatContainer!.scrollTop =
       dummy.current!.offsetTop - chatContainer!.offsetTop;
+
+    dummy.current?.scrollIntoView();
   };
 
   const value = {
