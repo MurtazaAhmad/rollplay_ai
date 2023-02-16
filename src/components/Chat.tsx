@@ -2,18 +2,10 @@ import Messages from "@/components/Messages";
 import MessageInput from "@/components/MessageInput";
 
 import { FC, useEffect } from "react";
-import useMessagesStore from "@/stores/messages";
+import useChat from "@/hooks/useChat";
 
-type Props = {
-  initialMessages: Message[];
-};
-
-const Chat: FC<Props> = ({ initialMessages }) => {
-  const { messages, setMessages } = useMessagesStore();
-
-  useEffect(() => {
-    setMessages(initialMessages);
-  }, []);
+const Chat: FC = () => {
+  const { messages, setMessages } = useChat();
 
   return (
     <section className="relative flex flex-col h-screen">

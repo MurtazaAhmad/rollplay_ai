@@ -8,14 +8,14 @@ import orderChatsByDate from "@/utils/orderChatsByDate";
 import { v4 as uuid } from "uuid";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { ChevronLeftIcon } from "@heroicons/react/24/outline";
-import scrollIntoView from "scroll-into-view";
+// import scrollIntoView from "scroll-into-view";
 
 import LoadingDots from "@/ui/LoadingDots";
+import useChat from "@/hooks/useChat";
 
 const Messages: FC = () => {
   // dummy ref to mantain vertical scroll
-  const dummy = useRef<null | HTMLSpanElement>(null);
-  const { messages, isAIAnswering, setMessages } = useMessagesStore();
+  const { messages, isAIAnswering, setMessages, dummy } = useChat();
   const supabase = useSupabaseClient();
   const { query, back } = useRouter();
 
@@ -36,11 +36,6 @@ const Messages: FC = () => {
 
     getData();
   }, []);
-
-  // handling auto scroll
-  useEffect(() => {
-    if (dummy.current) scrollIntoView(dummy.current);
-  }, [messages]);
 
   const goBack = () => {
     back();
@@ -71,7 +66,7 @@ const Messages: FC = () => {
     }
 
     // adding new messages
-    setMessages([...messages, ...newMessages]);
+    setMessages([...newMessages, ...messages]);
   };
 
   return (
@@ -130,24 +125,24 @@ const Messages: FC = () => {
                   })
                   .reverse()}
               </div>
-
-              {/* Answering animation */}
-              {isAIAnswering && (
-                <div
-                  className={`p-4 bg-dark text-white rounded-md rounded-tl-none w-max max-w-[85%] self-start flex items-center space-x-1`}
-                >
-                  <div className="w-1.5 bg-main rounded-full aspect-square animate-bounce"></div>
-                  <div className="w-1.5 delay-100 bg-main rounded-full aspect-square animate-bounce"></div>
-                  <div className="w-1.5 delay-200 bg-main rounded-full aspect-square animate-bounce"></div>
-                </div>
-              )}
-
-              {/* vertical scroll fix */}
-              <span ref={dummy} className="pt-4"></span>
             </div>
           );
         })}
       </InfiniteScroll>
+
+      {/* Answering animation */}
+      {isAIAnswering && (
+        <div
+          className={`p-4 bg-dark text-white rounded-md rounded-tl-none w-max max-w-[85%] self-start flex items-center space-x-1`}
+        >
+          <div className="w-1.5 bg-main rounded-full aspect-square animate-bounce"></div>
+          <div className="w-1.5 delay-100 bg-main rounded-full aspect-square animate-bounce"></div>
+          <div className="w-1.5 delay-200 bg-main rounded-full aspect-square animate-bounce"></div>
+        </div>
+      )}
+
+      {/* vertical scroll fix */}
+      <span ref={dummy} className="block h-4"></span>
 
       {messages.length === 0 && (
         <p className="text-xs text-center text-gray-400">

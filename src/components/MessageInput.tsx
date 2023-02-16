@@ -1,14 +1,16 @@
 import { useState, useEffect } from "react";
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
 
-import useMessagesStore from "@/stores/messages";
-import useAuth from "@/hooks/useAuth";
 import { useRouter } from "next/router";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
+import useAuth from "@/hooks/useAuth";
+
+import useChat from "@/hooks/useChat";
+
 const MessageInput = () => {
   const { user } = useAuth();
-  const { messages, setMessages, setIsAIAnswering } = useMessagesStore();
+  const { messages, setMessages, setIsAIAnswering } = useChat();
   const [message, setMessage] = useState("");
   const [character, setCharacter] = useState<Character | null>(null);
 
@@ -52,8 +54,7 @@ const MessageInput = () => {
       timestamp: new Date(),
     };
 
-    messages.unshift(newMessage);
-    setMessages(messages);
+    setMessages((prev) => [newMessage, ...prev]);
 
     // save own message
     await supabase.from("messages").insert({
@@ -66,6 +67,10 @@ const MessageInput = () => {
     setSendingMessage(false);
     setMessage("");
 
+    aiResponse();
+  };
+
+  const aiResponse = async () => {
     // ai answer
     setIsAIAnswering(true);
 
@@ -95,8 +100,8 @@ const MessageInput = () => {
       timestamp: new Date(),
     };
 
+    setMessages((prev) => [aiMessage, ...prev]);
     setIsAIAnswering(false);
-    setMessages([aiMessage, ...messages]);
 
     // saving ai message
     await supabase.from("messages").insert({

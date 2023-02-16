@@ -1,7 +1,9 @@
 import { FC } from "react";
 import { GetServerSidePropsContext } from "next";
-import Chat from "@/components/Chat";
+
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import ChatContextProvider from "@/context/chatContext";
+import Chat from "@/components/Chat";
 
 type Props = {
   messages: Message[];
@@ -10,7 +12,9 @@ type Props = {
 const ChatIndex: FC<Props> = ({ messages }) => {
   return (
     <main className="bg-fixed bg-black bg-cover bg-girl">
-      <Chat initialMessages={messages} />
+      <ChatContextProvider initialMessages={messages}>
+        <Chat />
+      </ChatContextProvider>
     </main>
   );
 };
