@@ -20,6 +20,8 @@ interface AuthContextType {
   setIsAIAnswering: Dispatch<SetStateAction<boolean>>;
 
   dummy: MutableRefObject<HTMLSpanElement | null> | null;
+
+  autoScroll: () => void;
 }
 
 const initial: AuthContextType = {
@@ -30,6 +32,8 @@ const initial: AuthContextType = {
   setIsAIAnswering: () => {},
 
   dummy: null,
+
+  autoScroll: () => {},
 };
 
 export const ChatContext = createContext<AuthContextType>(initial);
@@ -45,12 +49,17 @@ const ChatContextProvider: FC<ContextProps> = ({
 
   // handling auto scroll
   useEffect(() => {
-    const chatContainer = document.querySelector("#scrollable-chat") as HTMLDivElement;
-
-    if (dummy.current && !isAIAnswering) {
-      chatContainer!.scrollTop = dummy.current.offsetTop - chatContainer!.offsetTop;
-    }
+    autoScroll();
   }, [isAIAnswering]);
+
+  const autoScroll = () => {
+    const chatContainer = document.querySelector(
+      "#scrollable-chat"
+    ) as HTMLDivElement;
+
+    chatContainer!.scrollTop =
+      dummy.current!.offsetTop - chatContainer!.offsetTop;
+  };
 
   const value = {
     messages,
@@ -60,6 +69,7 @@ const ChatContextProvider: FC<ContextProps> = ({
     setIsAIAnswering,
 
     dummy,
+    autoScroll,
   };
 
   return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>;

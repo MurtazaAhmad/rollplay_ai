@@ -10,7 +10,7 @@ import useChat from "@/hooks/useChat";
 
 const MessageInput = () => {
   const { user } = useAuth();
-  const { messages, setMessages, setIsAIAnswering } = useChat();
+  const { messages, setMessages, setIsAIAnswering, autoScroll } = useChat();
   const [message, setMessage] = useState("");
   const [character, setCharacter] = useState<Character | null>(null);
 
@@ -67,12 +67,17 @@ const MessageInput = () => {
     setSendingMessage(false);
     setMessage("");
 
+    // triggering autoscroll
+    autoScroll();
+
     aiResponse();
   };
 
   const aiResponse = async () => {
     // ai answer
     setIsAIAnswering(true);
+
+    autoScroll();
 
     // sending message to AI
     const data = await fetch("/api/conversation", {
