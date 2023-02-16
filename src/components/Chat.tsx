@@ -8,7 +8,7 @@ const Chat: FC = () => {
   const { messages, setMessages } = useChat();
 
   return (
-    <section className="relative flex flex-col h-[calc(100vh-44px)] md:h-screen">
+    <section className="relative flex flex-col h-screen">
       {/* chat */}
 
       {/* chat container */}
@@ -20,7 +20,9 @@ const Chat: FC = () => {
       </div>
 
       {/* chat input */}
-      <MessageInput />
+      <div className="fixed bottom-0 left-0 right-0">
+        <MessageInput />
+      </div>
     </section>
   );
 };

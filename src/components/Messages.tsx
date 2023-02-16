@@ -142,7 +142,7 @@ const Messages: FC = () => {
       )}
 
       {/* vertical scroll fix */}
-      <span ref={dummy} className="block h-4"></span>
+      <span ref={dummy} className="block h-14"></span>
 
       {messages.length === 0 && (
         <p className="text-xs text-center text-gray-400">
