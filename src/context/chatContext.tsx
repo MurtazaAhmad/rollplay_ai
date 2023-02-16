@@ -7,8 +7,6 @@ import {
 } from "react";
 import type { FC, ReactNode, Dispatch, SetStateAction } from "react";
 
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
-
 type ContextProps = {
   children: ReactNode | ReactNode[];
   initialMessages: Message[];
@@ -45,13 +43,13 @@ const ChatContextProvider: FC<ContextProps> = ({
 
   const dummy = useRef<HTMLSpanElement>(null);
 
-  const supabase = useSupabaseClient();
-
   // handling auto scroll
   useEffect(() => {
-    console.log(messages);
+    const chatContainer = document.querySelector("#scrollable-chat") as HTMLDivElement;
 
-    if (dummy.current) dummy.current.scrollIntoView();
+    if (dummy.current) {
+      chatContainer!.scrollTop = dummy.current.offsetTop - chatContainer!.offsetTop;
+    }
   }, [messages]);
 
   const value = {
