@@ -8,7 +8,7 @@ const Chat: FC = () => {
   const { messages, setMessages } = useChat();
 
   return (
-    <section className="relative flex flex-col h-screen">
+    <section className="relative flex flex-col h-[calc(100vh-44px)] md:h-screen">
       {/* chat */}
 
       {/* chat container */}
