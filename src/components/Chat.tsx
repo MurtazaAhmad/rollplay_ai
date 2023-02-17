@@ -5,7 +5,7 @@ import { FC } from "react";
 
 const Chat: FC = () => {
   return (
-    <section className="relative flex flex-col md:h-screen">
+    <section className="relative flex flex-col min-h-screen md:h-screen">
       {/* chat */}
 
       {/* chat container */}
