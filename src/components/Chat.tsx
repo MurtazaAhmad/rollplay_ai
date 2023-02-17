@@ -1,19 +1,16 @@
 import Messages from "@/components/Messages";
 import MessageInput from "@/components/MessageInput";
 
-import { FC, useEffect } from "react";
-import useChat from "@/hooks/useChat";
+import { FC } from "react";
 
 const Chat: FC = () => {
-  const { messages, setMessages } = useChat();
-
   return (
-    <section className="relative flex flex-col h-screen">
+    <section className="relative flex flex-col md:h-screen">
       {/* chat */}
 
       {/* chat container */}
       <div
-        className="flex flex-col-reverse h-full max-h-full overflow-auto scrollbar"
+        className="flex flex-col-reverse h-full max-h-full overflow-auto scrollbar overflow-scroll-none"
         id="scrollable-chat"
       >
         <Messages />
