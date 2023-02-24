@@ -1,4 +1,4 @@
-import { createClient } from "@supabase/supabase-js";
+import supabase from "@/lib/supabase";
 import type { NextApiRequest, NextApiResponse } from "next";
 import {
   Configuration,
@@ -10,17 +10,6 @@ const configuration = new Configuration({
   apiKey: process.env.OPENAI_SECRET_KEY,
 });
 
-// admin supabase client
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL as string,
-  process.env.SUPABASE_SERVICE_ROLE_KEY as string,
-  {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false,
-    },
-  }
-);
 
 const openai = new OpenAIApi(configuration);
 
@@ -40,12 +29,12 @@ export default async function handler(
 ) {
   const { ai_id, chat_id } = req.body as Body;
 
-  // get 15 last messages to give more context.
+  // get 10 last messages to give more context.
   const { data: messages } = await supabase
     .from("messages")
     .select()
     .eq("chat_id", chat_id)
-    .limit(15);
+    .limit(10);
 
   // character
   const { data: characterData } = await supabase
@@ -82,7 +71,7 @@ export default async function handler(
       model: "text-davinci-003",
       prompt: prompt,
       temperature: 0.5,
-      max_tokens: 1024,
+      max_tokens: 2048,
     });
 
     res.status(200).json({ response: data.choices });

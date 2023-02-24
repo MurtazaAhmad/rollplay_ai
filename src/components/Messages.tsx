@@ -1,14 +1,12 @@
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-import useMessagesStore from "@/stores/messages";
 import orderChatsByDate from "@/utils/orderChatsByDate";
 
 import { v4 as uuid } from "uuid";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { ChevronLeftIcon } from "@heroicons/react/24/outline";
-// import scrollIntoView from "scroll-into-view";
 
 import LoadingDots from "@/ui/LoadingDots";
 import useChat from "@/hooks/useChat";

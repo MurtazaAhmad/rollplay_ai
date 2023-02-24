@@ -56,7 +56,7 @@ const AuthContextProvider: FC<ContextProps> = ({ children }) => {
       data: { user },
       error,
     } = await supabase.auth.getUser();
-
+    
     if (error || !user) {
       setUser(null);
       setLoading(false);
@@ -69,7 +69,21 @@ const AuthContextProvider: FC<ContextProps> = ({ children }) => {
         id: user.id,
         email: user.email,
         name: user.user_metadata.name,
+        isPro: false,
+        endPro: new Date(),
       };
+
+      //  verify subscription in stripe
+      if (user.user_metadata.subscription_id) {
+        const { active, end } = await fetch(
+          `/api/verifySubscription?subscription_id=${user.user_metadata.subscription_id}`
+        ).then((res) => res.json());
+
+        if (active) {
+          data.isPro = true;
+          data.endPro = end;
+        }
+      }
 
       setUser(data);
       setLoading(false);

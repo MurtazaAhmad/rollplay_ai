@@ -1,4 +1,4 @@
-export default function orderChatsByDate(chats: any) {
+export default function orderChatsByDate(chats: Message[]) {
   // this gives an object with dates as keys
   const groups = chats.reduce((groups: any, message: any) => {
     const date = new Date(message.timestamp).toDateString();

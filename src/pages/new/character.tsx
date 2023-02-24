@@ -1,4 +1,7 @@
-import React, { FormEvent, useState } from "react";
+import { GetServerSidePropsContext } from "next";
+import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
+
+import { FormEvent, useState } from "react";
 import Navbar from "@/components/Navbar";
 
 import { toast } from "react-hot-toast";
@@ -76,7 +79,7 @@ const NewCharacter = () => {
     }
 
     toast.success("Character created", { id: toastId });
-  
+
     // redirect to chat
     router.push("/chat");
   };
@@ -160,5 +163,31 @@ const NewCharacter = () => {
     </main>
   );
 };
+
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+  // Create authenticated Supabase Client
+  const supabase = createServerSupabaseClient(ctx, {
+    supabaseKey: process.env.NEXT_PUBLIC_SUPABASE_KEY,
+    supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL,
+  });
+
+  // // Check if we have a session
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  // if there's no session, redirect to auth
+  if (!session)
+    return {
+      redirect: {
+        destination: "/auth",
+        permanent: false,
+      },
+    };
+
+  return {
+    props: {},
+  };
+}
 
 export default NewCharacter;

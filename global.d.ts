@@ -3,7 +3,7 @@ declare module 'scroll-into-view';
 type Message = {
   content: string;
   author: string;
-  timestamp?: Date;
+  timestamp?: string;
   isAI: boolean;
   id?: number;
   chat_id: number;
@@ -19,4 +19,12 @@ interface Character {
   gender: string;
   age: number;
   created_by: string;
+}
+
+
+interface Chat {
+  ai: Character;
+  chat_id: number;
+  last_message: Message;
+  messages_count: number;
 }

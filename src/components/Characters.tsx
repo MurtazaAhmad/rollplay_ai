@@ -3,7 +3,7 @@ import Link from "next/link";
 import { FC } from "react";
 
 type Props = {
-  chats: any[];
+  chats: Chat[];
 };
 
 const Characters: FC<Props> = ({ chats }) => {
@@ -48,7 +48,7 @@ const Characters: FC<Props> = ({ chats }) => {
                       Last message:
                       <span className="text-main">
                         {" "}
-                        {formatDate(chat.last_message.timestamp)}
+                        {formatDate(chat.last_message.timestamp!)}
                       </span>
                     </p>
                   ) : (

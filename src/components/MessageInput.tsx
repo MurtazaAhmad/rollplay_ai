@@ -51,7 +51,7 @@ const MessageInput = () => {
       content: message,
       chat_id: 2,
       isAI: false,
-      timestamp: new Date(),
+      timestamp: new Date().toString(),
     };
 
     setMessages((prev) => [newMessage, ...prev]);
@@ -102,7 +102,7 @@ const MessageInput = () => {
       content: aiText,
       chat_id: parseInt(query.id as string),
       isAI: true,
-      timestamp: new Date(),
+      timestamp: new Date().toString(),
     };
 
     setMessages((prev) => [aiMessage, ...prev]);

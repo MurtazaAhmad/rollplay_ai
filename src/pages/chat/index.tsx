@@ -5,10 +5,11 @@ import Navbar from "@/components/Navbar";
 import Characters from "@/components/Characters";
 
 type Props = {
-  chats: any[];
+  chats: Chat[];
 };
 
 export default function ChatHome({ chats }: Props) {
+
   return (
     <main className="bg-fixed bg-black bg-cover bg-girl">
       <Navbar />
@@ -27,7 +28,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL,
   });
 
-  // Check if we have a session
+  // // Check if we have a session
   const {
     data: { session },
   } = await supabase.auth.getSession();
@@ -78,7 +79,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     };
   });
 
-  const chats = await Promise.all(res as []);
+  const chats = await Promise.all(res as Promise<Chat>[]);
 
   return {
     props: {

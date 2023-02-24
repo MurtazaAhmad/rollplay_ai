@@ -53,13 +53,6 @@ const ChatContextProvider: FC<ContextProps> = ({
   }, [isAIAnswering]);
 
   const autoScroll = () => {
-    // const chatContainer = document.querySelector(
-    //   "#scrollable-chat"
-    // ) as HTMLDivElement;
-
-    // chatContainer!.scrollTop =
-    //   dummy.current!.offsetTop - chatContainer!.offsetTop;
-
     dummy.current?.scrollIntoView();
   };
 
