@@ -2,6 +2,7 @@ import Link from "next/link";
 import useAuth from "@/hooks/useAuth";
 
 import UserMenu from "@/components/UserMenu";
+import GetPremium from "@/components/GetPremium";
 
 const Navbar = () => {
   const { user } = useAuth();
@@ -25,7 +26,12 @@ const Navbar = () => {
         </Link>
       </div>
 
-      <div className="flex items-center">{user && <UserMenu />}</div>
+      {user && (
+        <div className="flex items-center">
+          <div className="hidden sm:block">{!user.isPro && <GetPremium />}</div>
+          <UserMenu />
+        </div>
+      )}
     </nav>
   );
 };

@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-import type { FC, ReactNode } from "react";
+import type { FC, ReactNode, Dispatch, SetStateAction } from "react";
 
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
@@ -11,20 +11,27 @@ type User = {
   id: string;
   email: string;
   name: string;
+  isPro: boolean;
+  endPro?: Date;
 };
 
 interface AuthContextType {
   user: User | null;
+  setIsProModalOpen: Dispatch<SetStateAction<boolean>>;
+  isProModalOpen: boolean;
 }
 
 const initial = {
   user: null,
+  setIsProModalOpen: () => {},
+  isProModalOpen: false,
 };
 
 export const AuthContext = createContext<AuthContextType>(initial);
 
 const AuthContextProvider: FC<ContextProps> = ({ children }) => {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [isProModalOpen, setIsProModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const supabase = useSupabaseClient();
@@ -56,7 +63,7 @@ const AuthContextProvider: FC<ContextProps> = ({ children }) => {
       data: { user },
       error,
     } = await supabase.auth.getUser();
-    
+
     if (error || !user) {
       setUser(null);
       setLoading(false);
@@ -67,7 +74,7 @@ const AuthContextProvider: FC<ContextProps> = ({ children }) => {
     if (user) {
       const data = {
         id: user.id,
-        email: user.email,
+        email: user.email as string,
         name: user.user_metadata.name,
         isPro: false,
         endPro: new Date(),
@@ -92,6 +99,8 @@ const AuthContextProvider: FC<ContextProps> = ({ children }) => {
 
   const value = {
     user,
+    setIsProModalOpen,
+    isProModalOpen,
   };
 
   return (

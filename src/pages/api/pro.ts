@@ -4,7 +4,6 @@ import stripe from "@/lib/stripe";
 const YOUR_DOMAIN = process.env.NEXT_PUBLIC_HOST_URL;
 
 type BodyData = {
-  plan: "monthly" | "yearly";
   user_id: number | string;
 };
 
@@ -12,12 +11,9 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { plan, user_id } = req.query as BodyData;
+  const { user_id } = req.query as BodyData;
 
-  const price_id =
-    plan.toLowerCase() === "monthly"
-      ? process.env.STRIPE_MONTHLY_PRICE_ID
-      : process.env.STRIPE_YEARLY_PRICE_ID;
+  const price_id = process.env.STRIPE_PREMIUM_MONTHLY_PRICE_ID;
 
   if (req.method === "POST") {
     const session = await stripe.checkout.sessions.create({
