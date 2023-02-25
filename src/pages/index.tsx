@@ -1,7 +1,5 @@
-import Navbar from "@/components/Navbar";
-
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
+import { Pagination } from "swiper";
 import Link from "next/link";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 

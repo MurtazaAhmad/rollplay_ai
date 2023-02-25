@@ -1,22 +1,55 @@
+import { useEffect, useState } from "react";
+
 import { GetServerSidePropsContext } from "next";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 
 import Navbar from "@/components/Navbar";
 import Characters from "@/components/Characters";
 
+import OnboardingModal from "@/components/OnboardingModal";
+import useAuth from "@/hooks/useAuth";
+
 type Props = {
   chats: Chat[];
+  showSubscription: boolean;
 };
 
-export default function ChatHome({ chats }: Props) {
+export default function ChatHome({ chats, showSubscription }: Props) {
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const { setIsProModalOpen } = useAuth();
+
+  useEffect(() => {
+    const isNew = checkIfNewUser();
+
+    if (showSubscription && !isNew) {
+      setIsProModalOpen(true);
+    }
+  }, []);
+
+  const checkIfNewUser = () => {
+    // use localstorage to check if user is new
+    const isNewUser = Boolean(
+      localStorage.getItem("rollplay:has_seen_onboarding")
+    );
+
+    if (!isNewUser) {
+      localStorage.setItem("rollplay:has_seen_onboarding", "true");
+      setShowOnboarding(true);
+    }
+
+    return isNewUser;
+  };
 
   return (
     <main className="bg-fixed bg-black bg-cover bg-girl">
       <Navbar />
 
-      <div className="min-h-[calc(100vh-8px)] overflow-y-auto" >
+      <div className="min-h-[calc(100vh-8px)] overflow-y-auto">
         <Characters chats={chats} />
       </div>
+
+      {/* Onboarding modal for new users */}
+      {showOnboarding && <OnboardingModal />}
     </main>
   );
 }
@@ -86,6 +119,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
       initialSession: session,
       user: session.user,
       chats,
+      showSubscription: Boolean(ctx.query.subscription),
     },
   };
 }

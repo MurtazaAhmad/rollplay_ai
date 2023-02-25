@@ -7,12 +7,14 @@ const GetPremium = () => {
 
   const closeModal = () => {
     setIsProModalOpen(false);
-    document.querySelector("html")!.className = "!overflow-auto";
+
+    setTimeout(() => {
+      document.querySelector("html")!.removeAttribute("style");
+    }, 300);
   };
 
   const openModal = () => {
     setIsProModalOpen(true);
-    document.querySelector("html")!.className = "overflow-hidden";
   };
 
   const getPremium = async () => {

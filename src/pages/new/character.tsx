@@ -185,6 +185,34 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
       },
     };
 
+  //  verify subscription in stripe to check if user can create character
+  if (session.user.user_metadata.subscription_id) {
+    const { active, end }: { active: boolean; end: number } = await fetch(
+      `/api/verifySubscription?subscription_id=${session.user.user_metadata.subscription_id}`
+    ).then((res) => res.json());
+
+    if (active) {
+      return {
+        props: {},
+      };
+    }
+  }
+
+  // if subscription is not active and have one or more character, redirect to subscription page
+  const { data: chatData } = await supabase
+    .from("chats")
+    .select()
+    .eq("user_id", session.user.id);
+
+  if (chatData!.length >= 1) {
+    return {
+      redirect: {
+        destination: "/chat?subscription=true",
+        permanent: false,
+      },
+    };
+  }
+
   return {
     props: {},
   };

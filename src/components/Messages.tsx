@@ -59,10 +59,8 @@ const Messages: FC = () => {
       .order("timestamp", { ascending: false })
       .range(messages.length, messages.length + 50);
 
-    if (!newMessages) {
-      return;
-    }
-
+    if (!newMessages) return;
+    
     // adding new messages
     setMessages([...newMessages, ...messages]);
   };
@@ -102,7 +100,7 @@ const Messages: FC = () => {
 
               <div className="space-y-2">
                 {chat.messages
-                  .map((message: any) => {
+                  .map((message: Message) => {
                     const isAI = message.isAI;
                     const fallbackId = uuid();
 
