@@ -14,6 +14,7 @@ export default async function handler(
   await supabase.auth.admin.updateUserById(user_id as string, {
     user_metadata: {
       subscription_id: session.subscription,
+      session_id: session_id,
     },
   });
   

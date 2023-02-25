@@ -3,7 +3,7 @@ import { Transition, Dialog } from "@headlessui/react";
 import useAuth from "@/hooks/useAuth";
 
 const GetPremium = () => {
-  const { isProModalOpen, setIsProModalOpen } = useAuth();
+  const { isProModalOpen, setIsProModalOpen, user } = useAuth();
 
   const closeModal = () => {
     setIsProModalOpen(false);
@@ -13,6 +13,15 @@ const GetPremium = () => {
   const openModal = () => {
     setIsProModalOpen(true);
     document.querySelector("html")!.className = "overflow-hidden";
+  };
+
+  const getPremium = async () => {
+    const res = await fetch(`/api/pro?user_id=${user?.id}`, {
+      method: "POST",
+    }).then((res) => res.json());
+
+    // Open Stripe Checkout
+    window.location.href = res.session_url;
   };
 
   return (
@@ -51,23 +60,30 @@ const GetPremium = () => {
                     as="h3"
                     className="text-lg font-medium leading-6 text-white"
                   >
-                    Payment successful
+                    Get Rollplay.ai Premium
                   </Dialog.Title>
 
-                  <div className="mt-2">
-                    <p className="text-sm text-gray-500">
-                      Your payment has been successfully submitted. We’ve sent
-                      you an email with all of the details of your order.
+                  <div className="my-4">
+                    <h4 className="text-4xl text-white">$5.00/month</h4>
+                    <p className="mt-4 text-gray-400">
+                      <span className="text-main">Unlimited</span> access to all
+                      Rollplay.ai features.
                     </p>
+
+                    <ul className="mt-2 list-disc list-inside text-white/80">
+                      <li>Unlimited characters and chats.</li>
+                      <li>Unlimited messages.</li>
+                      <li>Images response from character</li>
+                    </ul>
                   </div>
 
-                  <div className="mt-4">
+                  <div className="mt-8">
                     <button
                       type="button"
                       className="inline-flex justify-center px-4 py-2 text-sm font-medium border border-transparent rounded-md text-dark bg-main"
-                      onClick={closeModal}
+                      onClick={getPremium}
                     >
-                      Got it, thanks!
+                      Get Premium
                     </button>
                   </div>
                 </Dialog.Panel>

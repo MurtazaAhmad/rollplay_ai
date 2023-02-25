@@ -18,16 +18,41 @@ const UserMenu = () => {
     router.replace("/auth");
   };
 
+  const handleBilling = async () => {
+    const res = await fetch(`/api/billing`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        user_id: user?.id,
+      }),
+    });
+
+    const { session_url } = await res.json();
+
+    window.location.href = session_url;
+  };
+
   return (
     <Popover as="div" className="relative m-8 outline-none">
       <Popover.Button>
         <UserCircleIcon className="text-white outline-none w-7 h-7" />
       </Popover.Button>
 
-      <Popover.Panel className="absolute right-0 z-50 p-2 space-y-4 bg-white border border-main rounded-md shadow-md min-w-[160px] bg-dark">
-        <p className="text-white">Hello, {user?.name}</p>
+      <Popover.Panel className="absolute right-0 z-50 p-4 space-y-4 bg-white border border-main rounded-md shadow-md min-w-[240px] bg-dark">
+        <p className="text-xl text-white">Hello, {user?.name}</p>
+        {user?.isPro && <small className="text-white">Premium user ⚡.</small>}
 
         <div className="block sm:hidden">{!user?.isPro && <GetPremium />}</div>
+        {user?.isPro && (
+          <button
+            onClick={handleBilling}
+            className="w-full py-2 mt-2 border rounded-md bg-dark border-main text-main"
+          >
+            Billing
+          </button>
+        )}
 
         <button
           onClick={handleLogout}

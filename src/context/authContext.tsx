@@ -12,7 +12,7 @@ type User = {
   email: string;
   name: string;
   isPro: boolean;
-  endPro?: Date;
+  endPro?: number;
 };
 
 interface AuthContextType {
@@ -77,12 +77,12 @@ const AuthContextProvider: FC<ContextProps> = ({ children }) => {
         email: user.email as string,
         name: user.user_metadata.name,
         isPro: false,
-        endPro: new Date(),
+        endPro: new Date().getTime(),
       };
 
       //  verify subscription in stripe
       if (user.user_metadata.subscription_id) {
-        const { active, end } = await fetch(
+        const { active, end }: { active: boolean; end: number } = await fetch(
           `/api/verifySubscription?subscription_id=${user.user_metadata.subscription_id}`
         ).then((res) => res.json());
 
