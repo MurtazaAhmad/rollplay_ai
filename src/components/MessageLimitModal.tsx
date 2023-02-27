@@ -47,7 +47,7 @@ export default function MyModal({ isOpen, setIsOpen }: Props) {
 
                 <div className="mt-2 space-y-4 text-sm text-gray-400">
                   <p>
-                    It looks like you've reached the message limit for your
+                    It looks like you{"'"}ve reached the message limit for your
                     account.
                   </p>
 
