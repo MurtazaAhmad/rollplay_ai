@@ -4,8 +4,9 @@ import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/router";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
-import useAuth from "@/hooks/useAuth";
+import MessageLimitModal from "@/components/MessageLimitModal";
 
+import useAuth from "@/hooks/useAuth";
 import useChat from "@/hooks/useChat";
 
 const MessageInput = () => {
@@ -14,7 +15,8 @@ const MessageInput = () => {
   const [message, setMessage] = useState("");
   const [character, setCharacter] = useState<Character | null>(null);
 
-  const [sendingMessage, setSendingMessage] = useState(false);
+  const [messagesLeft, setMessagesLeft] = useState<number>(0);
+  const [showLimitAlert, setShowLimitAlert] = useState<boolean>(false);
 
   const supabase = useSupabaseClient();
   const { query } = useRouter();
@@ -36,15 +38,39 @@ const MessageInput = () => {
         .eq("id", chatData.ai_id)
         .single();
 
+      // Getting messages limit
+      const messages_left = await checkLimit();
+      setMessagesLeft(messages_left);
+
       setCharacter(characterData);
     }
 
     getData();
   }, []);
 
+  const checkLimit = async () => {
+    // check message limit
+    const res = await fetch("/api/limit/checkMessageLimit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        user_id: user?.id,
+      }),
+    }).then((res) => res.json());
+
+    return res.messages_left;
+  };
+
   const sendMessage = async () => {
     if (message === "") return;
-    setSendingMessage(true);
+
+    // validating messages left if user is not premium
+    if (!user?.isPro && messagesLeft <= 0) {
+      setShowLimitAlert(true);
+      return;
+    }
 
     const newMessage: Message = {
       author: user!.name,
@@ -64,13 +90,26 @@ const MessageInput = () => {
       isAI: false,
     });
 
-    setSendingMessage(false);
     setMessage("");
 
     // triggering autoscroll
     autoScroll();
-
     aiResponse();
+
+    if (!user?.isPro) {
+      // decrementing messages left
+      await fetch("/api/limit/discountMessage", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_id: user?.id,
+        }),
+      });
+
+      setMessagesLeft((prev) => prev - 1);
+    }
   };
 
   const aiResponse = async () => {
@@ -119,6 +158,13 @@ const MessageInput = () => {
 
   return (
     <div className="flex items-center px-6 bg-black">
+      {showLimitAlert && (
+        <MessageLimitModal
+          isOpen={showLimitAlert}
+          setIsOpen={setShowLimitAlert}
+        />
+      )}
+
       <input
         type="text"
         placeholder="Type a message..."
