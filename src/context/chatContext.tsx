@@ -10,11 +10,15 @@ import type { FC, ReactNode, Dispatch, SetStateAction } from "react";
 type ContextProps = {
   children: ReactNode | ReactNode[];
   initialMessages: Message[];
+  initialChat: ChatRaw;
 };
 
 interface AuthContextType {
   messages: Message[];
   setMessages: Dispatch<SetStateAction<Message[]>>;
+
+  chat: ChatRaw | null;
+  setChat: Dispatch<SetStateAction<ChatRaw | null>>;
 
   isAIAnswering: boolean;
   setIsAIAnswering: Dispatch<SetStateAction<boolean>>;
@@ -27,6 +31,9 @@ interface AuthContextType {
 const initial: AuthContextType = {
   messages: [],
   setMessages: () => {},
+
+  chat: null,
+  setChat: () => {},
 
   isAIAnswering: false,
   setIsAIAnswering: () => {},
@@ -41,7 +48,9 @@ export const ChatContext = createContext<AuthContextType>(initial);
 const ChatContextProvider: FC<ContextProps> = ({
   children,
   initialMessages,
+  initialChat
 }) => {
+  const [chat, setChat] = useState<ChatRaw | null>(initialChat);
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [isAIAnswering, setIsAIAnswering] = useState<boolean>(false);
 
@@ -59,6 +68,9 @@ const ChatContextProvider: FC<ContextProps> = ({
   const value = {
     messages,
     setMessages,
+
+    chat,
+    setChat,
 
     isAIAnswering,
     setIsAIAnswering,

@@ -1,19 +1,19 @@
 import { FC, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import InfiniteScroll from "react-infinite-scroll-component";
-
-import orderChatsByDate from "@/utils/orderChatsByDate";
+import { Popover } from "@headlessui/react";
 
 import { v4 as uuid } from "uuid";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import { ChevronLeftIcon } from "@heroicons/react/24/outline";
+import { ChevronLeftIcon, Cog6ToothIcon } from "@heroicons/react/24/outline";
 
+import orderChatsByDate from "@/utils/orderChatsByDate";
 import LoadingDots from "@/ui/LoadingDots";
 import useChat from "@/hooks/useChat";
 
 const Messages: FC = () => {
   // dummy ref to mantain vertical scroll
-  const { messages, isAIAnswering, setMessages, dummy } = useChat();
+  const { messages, isAIAnswering, setMessages, dummy, chat } = useChat();
   const supabase = useSupabaseClient();
   const { query, back } = useRouter();
 
@@ -60,20 +60,55 @@ const Messages: FC = () => {
       .range(messages.length, messages.length + 50);
 
     if (!newMessages) return;
-    
+
     // adding new messages
     setMessages([...newMessages, ...messages]);
   };
 
+  const deleteChat = async () => {
+    // deleting messages and character
+    const res = [
+      await supabase.from("messages").delete().eq("chat_id", chat?.id).select('*'),
+      await supabase.from("chats").delete().eq("id", chat?.id).select('*'),
+      await supabase.from("characters").delete().eq("id", chat?.ai_id).select('*'),
+    ];
+
+    if (res.some((r) => r.status)) return console.log(res);
+
+    goBack();
+  };
+
   return (
     <div className="relative px-6 py-4 ">
-      {/* back button */}
-      <button
-        onClick={goBack}
-        className="fixed z-50 p-1 rounded-md left-5 top-5 bg-main/50 backdrop-blur-sm"
-      >
-        <ChevronLeftIcon className="w-5 h-5 text-white" />
-      </button>
+      <header className="fixed z-50 flex items-center justify-between left-5 top-5 right-5">
+        {/* back button */}
+        <button
+          onClick={goBack}
+          className="p-1 rounded-md bg-main/50 backdrop-blur-sm"
+        >
+          <ChevronLeftIcon className="w-5 h-5 text-white" />
+        </button>
+
+        {/* settings chat (delete) */}
+        <Popover className="relative inline-flex">
+          <Popover.Button>
+            <Cog6ToothIcon className="w-5 h-5 text-white" />
+          </Popover.Button>
+
+          <Popover.Panel className="absolute right-0 z-50 w-48 mt-4 origin-top-right rounded-md shadow-lg bg-dark top-full focus:outline-none">
+            <div className="p-2">
+              <h3 className="text-white">Settings</h3>
+
+              <button
+                onClick={deleteChat}
+                className="block w-full px-4 py-2 mt-2 text-sm font-medium text-white bg-red-500 rounded-md hover:bg-red-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
+              >
+                Delete chat
+              </button>
+            </div>
+          </Popover.Panel>
+        </Popover>
+      </header>
 
       {/* vertical scroll fix */}
       <div className="flex-1"></div>

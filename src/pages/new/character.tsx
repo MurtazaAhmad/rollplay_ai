@@ -9,6 +9,7 @@ import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
 import useAuth from "@/hooks/useAuth";
 import { useRouter } from "next/router";
+import stripe from "@/lib/stripe";
 
 const NewCharacter = () => {
   const { user } = useAuth();
@@ -187,11 +188,11 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
 
   //  verify subscription in stripe to check if user can create character
   if (session.user.user_metadata.subscription_id) {
-    const { active, end }: { active: boolean; end: number } = await fetch(
-      `/api/verifySubscription?subscription_id=${session.user.user_metadata.subscription_id}`
-    ).then((res) => res.json());
+    const subscription = await stripe.subscriptions.retrieve(
+      session.user.user_metadata.subscription_id
+    );
 
-    if (active) {
+    if (subscription.status === "active") {
       return {
         props: {},
       };

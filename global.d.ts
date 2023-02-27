@@ -28,3 +28,10 @@ interface Chat {
   last_message: Message;
   messages_count: number;
 }
+
+interface ChatRaw {
+  ai_id: number;
+  created_at: Date;
+  id: number;
+  user_id: string;
+}

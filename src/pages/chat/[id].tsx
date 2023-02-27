@@ -7,12 +7,13 @@ import Chat from "@/components/Chat";
 
 type Props = {
   messages: Message[];
+  chat: ChatRaw;
 };
 
-const ChatIndex: FC<Props> = ({ messages }) => {
+const ChatIndex: FC<Props> = ({ messages, chat }) => {
   return (
     <main className="bg-fixed bg-black bg-cover bg-girl">
-      <ChatContextProvider initialMessages={messages}>
+      <ChatContextProvider initialMessages={messages} initialChat={chat}>
         <Chat />
       </ChatContextProvider>
     </main>
@@ -85,6 +86,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
 
   return {
     props: {
+      chat: chatData,
       messages: messages,
     },
   };
