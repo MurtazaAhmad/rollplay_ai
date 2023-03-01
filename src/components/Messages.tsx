@@ -69,8 +69,8 @@ const Messages: FC = () => {
     // deleting messages and character
     const res = [
       await supabase.from("messages").delete().eq("chat_id", chat?.id),
-      await supabase.from("chats").delete().eq("id", chat?.id).select(),
-      await supabase.from("characters").delete().eq("id", chat?.ai_id).select(),
+      await supabase.from("chats").delete().eq("id", chat?.id),
+      await supabase.from("characters").delete().eq("id", chat?.ai_id),
     ];
 
     // if any error, return

@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
+import { GiftIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline";
 
 import { useRouter } from "next/router";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
 import MessageLimitModal from "@/components/MessageLimitModal";
+import BuyGift from "@/components/BuyGift";
 
 import useAuth from "@/hooks/useAuth";
 import useChat from "@/hooks/useChat";
@@ -17,6 +18,7 @@ const MessageInput = () => {
 
   const [messagesLeft, setMessagesLeft] = useState<number>(0);
   const [showLimitAlert, setShowLimitAlert] = useState<boolean>(false);
+  const [paymentSecret, setPaymentSecret] = useState<string>("");
 
   const supabase = useSupabaseClient();
   const { query } = useRouter();
@@ -156,12 +158,38 @@ const MessageInput = () => {
     });
   };
 
+  const sendGift = async () => {
+    const { paymentClientSecret } = await fetch("/api/gift", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        // price in dollars
+        price: 5,
+      }),
+    }).then((res) => res.json());
+
+    setPaymentSecret(paymentClientSecret);
+  };
+
   return (
-    <div className="flex items-center px-6 bg-black">
+    <div className="flex items-center px-6 space-x-2 bg-black">
       {showLimitAlert && (
         <MessageLimitModal
           isOpen={showLimitAlert}
           setIsOpen={setShowLimitAlert}
+        />
+      )}
+
+      {paymentSecret && (
+        <BuyGift
+          options={{
+            clientSecret: paymentSecret,
+            appearance: {
+              theme: "night",
+              variables: { colorPrimary: "#FD79A8" },
+            },
+          }}
+          setPaymentSecret={setPaymentSecret}
         />
       )}
 
@@ -176,13 +204,19 @@ const MessageInput = () => {
         className="flex-1 py-4 text-white bg-transparent outline-none"
       />
 
-      <button
-        onClick={sendMessage}
-        disabled={!message}
-        className="disabled:opacity-50"
-      >
-        <PaperAirplaneIcon className="w-5 h-5 text-white" />
-      </button>
+      <div className="inline-flex items-center space-x-4">
+        <button
+          onClick={sendMessage}
+          disabled={!message}
+          className="disabled:opacity-50"
+        >
+          <PaperAirplaneIcon className="w-5 h-5 text-white" />
+        </button>
+
+        <button onClick={sendGift}>
+          <GiftIcon className="w-5 h-5 text-white" />
+        </button>
+      </div>
     </div>
   );
 };

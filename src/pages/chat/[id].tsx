@@ -8,9 +8,10 @@ import Chat from "@/components/Chat";
 type Props = {
   messages: Message[];
   chat: ChatRaw;
+  buyGift: boolean;
 };
 
-const ChatIndex: FC<Props> = ({ messages, chat }) => {
+const ChatIndex: FC<Props> = ({ messages, chat, buyGift }) => {
   return (
     <main className="bg-fixed bg-black bg-cover bg-girl">
       <ChatContextProvider initialMessages={messages} initialChat={chat}>
@@ -84,10 +85,14 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     };
   }
 
+  // get buyGift query
+  const { buyGift } = ctx.query;
+
   return {
     props: {
       chat: chatData,
       messages: messages,
+      buyGift: buyGift === "true" ? true : false,
     },
   };
 }
