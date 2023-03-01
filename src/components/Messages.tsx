@@ -68,12 +68,13 @@ const Messages: FC = () => {
   const deleteChat = async () => {
     // deleting messages and character
     const res = [
-      await supabase.from("messages").delete().eq("chat_id", chat?.id).select('*'),
-      await supabase.from("chats").delete().eq("id", chat?.id).select('*'),
-      await supabase.from("characters").delete().eq("id", chat?.ai_id).select('*'),
+      await supabase.from("messages").delete().eq("chat_id", chat?.id),
+      await supabase.from("chats").delete().eq("id", chat?.id).select(),
+      await supabase.from("characters").delete().eq("id", chat?.ai_id).select(),
     ];
 
-    if (res.some((r) => r.status)) return console.log(res);
+    // if any error, return
+    if (res.some((r) => r.error)) return console.error("Error deleting chat");
 
     goBack();
   };
