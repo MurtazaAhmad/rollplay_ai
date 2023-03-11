@@ -1,5 +1,9 @@
 import { useState, useEffect } from "react";
-import { GiftIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline";
+import {
+  CameraIcon,
+  GiftIcon,
+  PaperAirplaneIcon,
+} from "@heroicons/react/24/outline";
 
 import { useRouter } from "next/router";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
@@ -133,10 +137,8 @@ const MessageInput = () => {
       }),
     }).then((res) => res.json());
 
-    // retrieving data
-
     // removing all initals whitespaces on text
-    const aiText = data.response[0].text.replace(/^[\s]*(.*)/, "$1");
+    const aiText = data.response[0].message.content;
 
     const aiMessage = {
       author: character?.name || "",
@@ -213,9 +215,13 @@ const MessageInput = () => {
           <PaperAirplaneIcon className="w-5 h-5 text-white" />
         </button>
 
-        <button onClick={sendGift}>
-          <GiftIcon className="w-5 h-5 text-white" />
+        <button>
+          <CameraIcon className="w-5 h-5 text-white" />
         </button>
+
+        {/* <button onClick={sendGift}>
+          <GiftIcon className="w-5 h-5 text-white" />
+        </button> */}
       </div>
     </div>
   );

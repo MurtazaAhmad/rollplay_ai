@@ -87,9 +87,12 @@ const NewCharacter = () => {
 
   return (
     <main className="bg-black bg-cover bg-girl">
+      {/* overlay */}
+      <div className="fixed inset-0 bg-black opacity-50 z-[0]"></div>
+
       <Navbar />
 
-      <section>
+      <section className="relative z-10">
         <header className="px-6 my-12 text-left">
           <h1 className="text-xl font-bold text-white">
             Create new character to chat.

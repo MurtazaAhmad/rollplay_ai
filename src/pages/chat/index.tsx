@@ -42,9 +42,12 @@ export default function ChatHome({ chats, showSubscription }: Props) {
 
   return (
     <main className="bg-fixed bg-black bg-cover bg-girl">
+      {/* overlay */}
+      <div className="fixed inset-0 bg-black opacity-50 z-[0]"></div>
+
       <Navbar />
 
-      <div className="min-h-[calc(100vh-8px)] overflow-y-auto">
+      <div className="min-h-[calc(100vh-8px)] overflow-y-auto relative z-10">
         <Characters chats={chats} />
       </div>
 

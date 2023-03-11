@@ -14,6 +14,9 @@ type Props = {
 const ChatIndex: FC<Props> = ({ messages, chat, buyGift }) => {
   return (
     <main className="bg-fixed bg-black bg-cover bg-girl">
+      {/* overlay */}
+      <div className="fixed inset-0 bg-black opacity-50 z-[0]"></div>
+
       <ChatContextProvider initialMessages={messages} initialChat={chat}>
         <Chat />
       </ChatContextProvider>

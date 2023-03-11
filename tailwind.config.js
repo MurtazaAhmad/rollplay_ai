@@ -15,7 +15,7 @@ module.exports = {
         main: '#FD79A8'
       },
       backgroundImage: {
-        girl: "url('/assets/bg.png')"
+        girl: "url('/assets/bg-wholesome-yae-miko.png')"
       }
     },
   },
