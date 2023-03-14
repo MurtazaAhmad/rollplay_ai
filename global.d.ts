@@ -9,6 +9,11 @@ type Message = {
   chat_id: number;
 };
 
+type AIMessage = {
+  role: 'system' | 'assistant' | 'user';
+  content: string
+}
+
 interface Character {
   id: number;
   created_at: Date;
