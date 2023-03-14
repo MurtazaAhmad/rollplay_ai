@@ -45,3 +45,8 @@ body {
 .swiper-pagination-bullet-active {
   @apply !bg-main;
 }
+
+/* ai image */
+.ai-image {
+  @apply block object-cover w-64 my-2 rounded-md aspect-square;
+}

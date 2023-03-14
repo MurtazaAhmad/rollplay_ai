@@ -81,7 +81,7 @@ const MessageInput = () => {
     const newMessage: Message = {
       author: user!.name,
       content: message,
-      chat_id: 2,
+      chat_id: parseInt(query.id as string),
       isAI: false,
       timestamp: new Date().toString(),
     };
@@ -173,6 +173,34 @@ const MessageInput = () => {
     setPaymentSecret(paymentClientSecret);
   };
 
+  const getCharacterImage = async () => {
+    const res = await fetch("/api/image/generate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        // image context
+        prompt: character!.context,
+      }),
+    });
+
+    const { image } = await res.json();
+
+    const newMessage: Message = {
+      author: character!.name,
+      content: `
+        <img src="${image}" alt="Redhead girl, naked and smiling shyly" class="ai-image" />
+      `,
+      chat_id: parseInt(query.id as string),
+      isAI: true,
+      timestamp: new Date().toString(),
+    };
+
+    setMessages((prev) => [newMessage, ...prev]);
+    autoScroll()
+  };
+
   return (
     <div className="flex items-center px-6 space-x-2 bg-black">
       {showLimitAlert && (
@@ -215,7 +243,7 @@ const MessageInput = () => {
           <PaperAirplaneIcon className="w-5 h-5 text-white" />
         </button>
 
-        <button>
+        <button onClick={getCharacterImage}>
           <CameraIcon className="w-5 h-5 text-white" />
         </button>
 

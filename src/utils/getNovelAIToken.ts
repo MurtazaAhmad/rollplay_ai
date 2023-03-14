@@ -1,4 +1,4 @@
-export default async function getNovelAIToken() {
+export default async function getNovelAIToken(): Promise<string> {
   const login_key = process.env.NOVELAI_LOGIN_KEY!;
 
   try {
@@ -14,11 +14,10 @@ export default async function getNovelAIToken() {
     });
 
     const res = await response.json();
-    console.log(res);
-
-    return res.token;
+    
+    return res.accessToken;
   } catch (error) {
     console.error(error);
-    return null;
+    return '';
   }
 }

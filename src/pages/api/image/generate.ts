@@ -1,12 +1,11 @@
 import { NextApiRequest, NextApiResponse } from "next";
-// import getNovelAIToken from "@/utils/getNovelAIToken";
+import getNovelAIToken from "@/utils/getNovelAIToken";
 
 const API_URL = "https://api.novelai.net";
-const token = process.env.NOVELAI_TOKEN!;
+// const token = process.env.NOVELAI_TOKEN!;
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  // const token = await getNovelAIToken();
-
+  const token = await getNovelAIToken();
   try {
     const response = await fetch(`${API_URL}/ai/generate-image`, {
       method: "POST",
@@ -30,9 +29,19 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           ucPreset: 0,
         },
       }),
-    }).then((res) => res.arrayBuffer());
+    });
 
-    res.status(200).send(response);
+    const text = await response.text();
+
+    // get data content from the following:
+    // event: newImage
+    // id: 1
+    // data: base64 string
+
+    const data = text.split("data:")[1];
+    const image = `data:image/png;base64,${data}`;
+
+    res.status(200).json({ image });
   } catch (error) {
     console.log(error);
 
