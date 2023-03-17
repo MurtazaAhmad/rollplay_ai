@@ -78,7 +78,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     .select()
     .eq("chat_id", chatId)
     .order("timestamp", { ascending: false })
-    .limit(50);
+    .limit(30);
 
   if (!messages) {
     return {

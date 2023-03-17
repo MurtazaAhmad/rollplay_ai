@@ -13,13 +13,13 @@ export default async function handler(
 ) {
   const { ai_id, chat_id, input } = req.body as Body;
 
-  // get 10 last messages to give more context.
+  // get 15 last messages to give more context.
   const { data: chatMessages } = await supabase
     .from("messages")
     .select()
     .eq("chat_id", chat_id)
     .order("timestamp", { ascending: true })
-    .limit(10);
+    .limit(15);
 
   // character
   const { data: characterData } = await supabase
@@ -30,6 +30,14 @@ export default async function handler(
 
   const messageLine: AIMessage[] = chatMessages!.map((message) => {
     if (message.isAI) {
+      if (message.content.includes("img")) {
+        return {
+          role: "assistant",
+          // take alt text from img tag
+          content: `Image sent: ${message.content.match(/alt="([^"]*)"/)![1]}`,
+        };
+      }
+
       return {
         role: "assistant",
         content: message.content,
@@ -79,11 +87,13 @@ export default async function handler(
         Authorization: `Bearer ${process.env.OPENAI_SECRET_KEY}`,
       },
       body: JSON.stringify({
-        model: "gpt-3.5-turbo",
+        model: "gpt-4",
         messages,
-        temperature: 0.7,
+        temperature: 0.5,
       }),
     }).then((res) => res.json());
+
+    console.log(data);
 
     res.status(200).json({ response: data.choices });
   } catch (error) {

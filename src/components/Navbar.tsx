@@ -8,13 +8,13 @@ const Navbar = () => {
   const { user } = useAuth();
 
   return (
-    <nav className="relative flex items-center justify-end mt-2">
+    <nav className="relative flex items-center justify-end">
       <div className="absolute top-0 px-12 pb-4 -translate-x-1/2 bg-white rounded-b-full left-1/2">
         <Link href="/">
           <img
-            src="/assets/logo-white.png"
+            src="/assets/logo-flat.png"
             alt="Rollplay logo"
-            className="object-contain w-14 aspect-square"
+            className="object-contain w-16 mt-2 aspect-square"
           />
         </Link>
 

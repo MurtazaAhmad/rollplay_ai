@@ -12,7 +12,7 @@ module.exports = {
       },
       colors: {
         dark: "#111",
-        main: '#FD79A8'
+        main: '#00b8b7'
       },
       backgroundImage: {
         girl: "url('/assets/bg-wholesome-yae-miko.png')"

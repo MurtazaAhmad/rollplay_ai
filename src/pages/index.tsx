@@ -33,7 +33,7 @@ const Index = () => {
         <section className="grid md:grid-cols-[40%_20px_1fr] md:h-[400px] gap-4">
           <article className="text-white">
             <img
-              src="/assets/logo-white.png"
+              src="/assets/logo-flat.png"
               alt="Rollplay logo"
               className="object-contain w-24 aspect-square"
             />

@@ -13,7 +13,8 @@ import useChat from "@/hooks/useChat";
 
 const Messages: FC = () => {
   // dummy ref to mantain vertical scroll
-  const { messages, isAIAnswering, setMessages, dummy, chat } = useChat();
+  const { messages, isAIAnswering, setMessages, dummy, chat, autoScroll } =
+    useChat();
   const supabase = useSupabaseClient();
   const { query, back } = useRouter();
 
@@ -50,19 +51,19 @@ const Messages: FC = () => {
     }).format(new Date(date));
   };
 
-  // load more messages 50 - 50
+  // load more messages 30 - 30
   const loadMoreMessages = async () => {
     const { data: newMessages }: { data: Message[] | null } = await supabase
       .from("messages")
       .select()
       .eq("chat_id", query.id)
       .order("timestamp", { ascending: false })
-      .range(messages.length, messages.length + 50);
+      .range(messages.length, messages.length + 30);
 
     if (!newMessages) return;
 
     // adding new messages
-    setMessages([...newMessages, ...messages]);
+    setMessages([...messages, ...newMessages]);
   };
 
   const deleteChat = async () => {
@@ -84,7 +85,7 @@ const Messages: FC = () => {
   };
 
   return (
-    <div className="relative px-6 py-4 ">
+    <div className="relative px-6 py-4">
       <header className="fixed z-50 flex items-center justify-between left-5 top-5 right-5">
         {/* back button */}
         <button
@@ -147,7 +148,7 @@ const Messages: FC = () => {
                     return (
                       <div
                         key={message.id || fallbackId}
-                        className={`p-2 bg-dark text-white rounded-md rounded-tl-none w-max max-w-[85%] break-words whitespace-pre-wrap ${
+                        className={`p-2 bg-dark text-white rounded-md rounded-tl-none w-max max-w-[85%] break-words ${
                           isAI
                             ? "self-start"
                             : "!bg-main text-dark self-end ml-auto !rounded-md !rounded-tr-none"
@@ -168,7 +169,7 @@ const Messages: FC = () => {
       {/* Answering animation */}
       {isAIAnswering && (
         <div
-          className={`p-4 bg-dark text-white rounded-md rounded-tl-none w-max max-w-[85%] self-start flex items-center space-x-1`}
+          className={`p-4 bg-dark text-white rounded-md rounded-tl-none w-max max-w-[85%] self-start flex items-center space-x-1 mt-2`}
         >
           <div className="w-1.5 bg-main rounded-full aspect-square animate-bounce"></div>
           <div className="w-1.5 delay-100 bg-main rounded-full aspect-square animate-bounce"></div>

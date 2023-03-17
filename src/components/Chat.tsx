@@ -5,12 +5,12 @@ import { FC } from "react";
 
 const Chat: FC = () => {
   return (
-    <section className="relative z-10 flex flex-col min-h-screen md:h-screen">
+    <section className="relative z-10 flex flex-col h-screen md:h-screen">
       {/* chat */}
 
       {/* chat container */}
       <div
-        className="flex flex-col-reverse h-full max-h-full overflow-auto scrollbar overflow-scroll-none"
+        className="flex flex-col-reverse h-full max-h-full overflow-auto scrollbar"
         id="scrollable-chat"
       >
         <Messages />

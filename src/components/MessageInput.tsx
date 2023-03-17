@@ -1,9 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  CameraIcon,
-  GiftIcon,
-  PaperAirplaneIcon,
-} from "@heroicons/react/24/outline";
+import { PhotoIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline";
 
 import { useRouter } from "next/router";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
@@ -21,6 +17,8 @@ const MessageInput = () => {
   const [character, setCharacter] = useState<Character | null>(null);
 
   const [messagesLeft, setMessagesLeft] = useState<number>(0);
+  const [imagesLeft, setImagesLeft] = useState<number>(0);
+
   const [showLimitAlert, setShowLimitAlert] = useState<boolean>(false);
   const [paymentSecret, setPaymentSecret] = useState<string>("");
 
@@ -174,6 +172,41 @@ const MessageInput = () => {
   };
 
   const getCharacterImage = async () => {
+    // if (message === "") return;
+
+    // validating messages left if user is not premium
+    if (!user?.isPro && messagesLeft <= 0) {
+      setShowLimitAlert(true);
+      return;
+    }
+
+    if (message) {
+      const newUserMessage: Message = {
+        author: user!.name,
+        content: message,
+        chat_id: parseInt(query.id as string),
+        isAI: false,
+        timestamp: new Date().toString(),
+      };
+
+      setMessages((prev) => [newUserMessage, ...prev]);
+
+      // save own message
+      await supabase.from("messages").insert({
+        content: message,
+        chat_id: query.id,
+        author: user?.name,
+        isAI: false,
+      });
+
+      setMessage("");
+
+      // triggering autoscroll
+      autoScroll();
+    }
+
+    setIsAIAnswering(true);
+
     const res = await fetch("/api/image/generate", {
       method: "POST",
       headers: {
@@ -181,7 +214,9 @@ const MessageInput = () => {
       },
       body: JSON.stringify({
         // image context
-        prompt: character!.context,
+        prompt: `Character context: ${
+          character!.context
+        } - User prompt: ${message}`,
       }),
     });
 
@@ -190,7 +225,7 @@ const MessageInput = () => {
     const newMessage: Message = {
       author: character!.name,
       content: `
-        <img src="${image}" alt="Redhead girl, naked and smiling shyly" class="ai-image" />
+        <img src="${image}" alt="Character image" class="ai-image" />
       `,
       chat_id: parseInt(query.id as string),
       isAI: true,
@@ -198,7 +233,17 @@ const MessageInput = () => {
     };
 
     setMessages((prev) => [newMessage, ...prev]);
-    autoScroll()
+    autoScroll();
+
+    setIsAIAnswering(false);
+
+    // saving ai message
+    await supabase.from("messages").insert({
+      content: `<img src="${image}" alt="Character image" class="ai-image" />`,
+      chat_id: query.id,
+      author: character?.name,
+      isAI: true,
+    });
   };
 
   return (
@@ -244,7 +289,7 @@ const MessageInput = () => {
         </button>
 
         <button onClick={getCharacterImage}>
-          <CameraIcon className="w-5 h-5 text-white" />
+          <PhotoIcon className="w-5 h-5 text-white" />
         </button>
 
         {/* <button onClick={sendGift}>
