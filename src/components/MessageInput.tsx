@@ -172,37 +172,10 @@ const MessageInput = () => {
   };
 
   const getCharacterImage = async () => {
-    // if (message === "") return;
-
     // validating messages left if user is not premium
     if (!user?.isPro && messagesLeft <= 0) {
       setShowLimitAlert(true);
       return;
-    }
-
-    if (message) {
-      const newUserMessage: Message = {
-        author: user!.name,
-        content: message,
-        chat_id: parseInt(query.id as string),
-        isAI: false,
-        timestamp: new Date().toString(),
-      };
-
-      setMessages((prev) => [newUserMessage, ...prev]);
-
-      // save own message
-      await supabase.from("messages").insert({
-        content: message,
-        chat_id: query.id,
-        author: user?.name,
-        isAI: false,
-      });
-
-      setMessage("");
-
-      // triggering autoscroll
-      autoScroll();
     }
 
     setIsAIAnswering(true);
@@ -213,10 +186,12 @@ const MessageInput = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        // image context
-        prompt: `Character context: ${
-          character!.context
-        } - User prompt: ${message}`,
+        // get last 20 messages to create context for image
+        chat_id: query.id,
+        character: {
+          name: character?.name,
+          description: character?.context,
+        },
       }),
     });
 
