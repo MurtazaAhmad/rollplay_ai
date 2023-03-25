@@ -26,10 +26,6 @@ const MessageInput = () => {
   const { query } = useRouter();
 
   useEffect(() => {
-    getImage();
-  }, []);
-
-  useEffect(() => {
     // getting ai info
     async function getData() {
       // Getting chatroom
@@ -55,25 +51,6 @@ const MessageInput = () => {
 
     getData();
   }, []);
-
-  const getImage = async () => {
-    const image = await fetch("/api/image/generate", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        prompt: "A man is walking down the street",
-      }),
-    }).then((res) => res.arrayBuffer());
-
-    // array buffer to blob
-    const blob = new Blob([image], { type: "image/png" });
-
-    // blob to url
-    const url = URL.createObjectURL(blob);
-    window.open(url, "_blank");
-  };
 
   const checkLimit = async () => {
     // check message limit
