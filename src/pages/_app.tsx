@@ -14,6 +14,7 @@ import AuthContextProvider from "@/context/authContext";
 
 import { Inter } from "@next/font/google";
 import { Toaster } from "react-hot-toast";
+import Head from "next/head";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -33,6 +34,14 @@ export default function App({
       supabaseClient={supabaseClient}
       initialSession={pageProps.initialSession}
     >
+      <Head>
+        <title>Rollplay.ai - Chat with your favorite characters!</title>
+        <meta
+          name="description"
+          content="Rollplay.ai is a platform where you can chat with your favorite characters from movies, tv shows, games, and more!"
+        />
+      </Head>
+
       {/* Optimized font family */}
       <style global jsx>
         {`

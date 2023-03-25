@@ -1,15 +1,15 @@
 export default function base64ArrayBuffer(arrayBuffer: any) {
-  var base64 = "";
-  var encodings =
+  let base64 = "";
+  let encodings =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-  var bytes = new Uint8Array(arrayBuffer);
-  var byteLength = bytes.byteLength;
-  var byteRemainder = byteLength % 3;
-  var mainLength = byteLength - byteRemainder;
+  let bytes = new Uint8Array(arrayBuffer);
+  let byteLength = bytes.byteLength;
+  let byteRemainder = byteLength % 3;
+  let mainLength = byteLength - byteRemainder;
 
-  var a, b, c, d;
-  var chunk;
+  let a, b, c, d;
+  let chunk;
 
   // Main loop deals with bytes in chunks of 3
   for (var i = 0; i < mainLength; i = i + 3) {
