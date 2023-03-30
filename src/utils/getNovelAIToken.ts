@@ -15,7 +15,7 @@ export default async function getNovelAIToken(): Promise<string> {
 
     const res = await response.json();
     
-    return res.accessToken;
+    return res.accessToken as string;
   } catch (error) {
     console.error(error);
     return '';

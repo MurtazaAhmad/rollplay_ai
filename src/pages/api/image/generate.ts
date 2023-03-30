@@ -31,6 +31,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const prompt = `
     Generate a parrapraph explaining the current situation on the chat based on the last messages,
     keep in mind the charact description to enchance the context. Be descriptive with visual details to generate an image.
+    Try just to keep the character only in the image, no other characters or the user itself.
     --
     Last messages: ${messageLine.join("\n")}
     Character: ${character.name}
@@ -70,7 +71,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           width: 512,
           n_samples: 1,
           qualityToggle: true,
-          sampler: "k_euler_ancestral",
+          sampler: "k_dpmpp_2m",
           scale: 11,
           steps: 28,
           uc: "lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry",
