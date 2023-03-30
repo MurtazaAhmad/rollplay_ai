@@ -149,7 +149,7 @@ const NewCharacter = () => {
           </div>
 
           <label className="block">
-            <p className="mb-2 text-white">Description ${characterData.context}</p>
+            <p className="mb-2 text-white">Description (context)</p>
             <textarea
               className="w-full p-4 text-white bg-transparent border-b border-white outline-none min-h-[200px] resize-none"
               placeholder="She comes for planet XYZ..."
