@@ -4,7 +4,10 @@ import supabase from "@/lib/supabase";
 
 const API_URL = "https://api.novelai.net";
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   const token = await getNovelAIToken();
   const { chat_id, character } = req.body;
 
@@ -74,7 +77,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           sampler: "k_dpmpp_2m",
           scale: 11,
           steps: 28,
-          uc: "lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry",
+          uc: "(worst quality, low quality:1.4), bad anatomy, extra ears, fewer digits, text, signature, watermark, username, artist name, bad proportions, greyscale, monocrome, multiple views, lowres, multiple tails, blurry, extra fingers, missing fingers, bad eyes, blurry eyes, distorted eyes, dark skin, disfigured, gross proportions, malformed limbs, missing arms, missing legs, extra arms, extra legs, fused fingers, too many fingers, long neck, username, watermark, signature, (((deformed))), [blurry], (poorly drawn hands), ((jpeg artifacts)), missing toes, ((feet out of frame)), ((gaping asshole)), ((((gaping pussy)))), ((gape)), by bad artist",
           ucPreset: 0,
         },
       }),
@@ -91,4 +94,4 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     res.status(500).json({ error: error });
   }
-};
+}
