@@ -12,7 +12,7 @@ import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
 
 const host_url = process.env.NEXT_PUBLIC_HOST_URL!;
 
-const GiftForm = () => {
+const GiftForm = ({ gift }: { gift: any }) => {
   const [loading, setLoading] = useState(false);
 
   const stripe = useStripe();
@@ -33,8 +33,9 @@ const GiftForm = () => {
     const result = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        return_url: `${host_url}/api/saveGift?chat_id=${query.id}&user_id=${user?.id}`,
+        return_url: `${host_url}/api/saveGift?chat_id=${query.id}&user_id=${user?.id}&gift=${gift.name}`,
       },
+      // redirect: "if_required",
     });
 
     if (result.error) {
@@ -42,7 +43,8 @@ const GiftForm = () => {
       console.log(result.error.message);
       return;
     }
-
+    
+    // console.log(result.paymentIntent);
     setLoading(false);
   };
 

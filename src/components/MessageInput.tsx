@@ -1,5 +1,9 @@
 import { useState, useEffect } from "react";
-import { PhotoIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline";
+import {
+  PhotoIcon,
+  PaperAirplaneIcon,
+  GiftIcon,
+} from "@heroicons/react/24/outline";
 
 import { useRouter } from "next/router";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
@@ -9,6 +13,7 @@ import BuyGift from "@/components/BuyGift";
 
 import useAuth from "@/hooks/useAuth";
 import useChat from "@/hooks/useChat";
+import GiftModal from "./GiftModal";
 
 const MessageInput = () => {
   const { user } = useAuth();
@@ -21,6 +26,10 @@ const MessageInput = () => {
 
   const [showLimitAlert, setShowLimitAlert] = useState<boolean>(false);
   const [paymentSecret, setPaymentSecret] = useState<string>("");
+  const [gifts, setGifts] = useState<any[]>([]);
+  const [showGiftModal, setShowGiftModal] = useState<boolean>(false);
+  const [showPaymentModal, setShowPaymentModal] = useState<boolean>(false);
+  const [selectedGift, setSelectedGift] = useState<any>(null);
 
   const supabase = useSupabaseClient();
   const { query } = useRouter();
@@ -156,19 +165,63 @@ const MessageInput = () => {
       author: character?.name,
       isAI: true,
     });
+
+    await checkGiftSuggestions();
   };
 
-  const sendGift = async () => {
+  // check if it's a good chance to send a gift
+  const checkGiftSuggestions = async () => {
+    fetch("/api/gift/check", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        messages: [...messages].slice(0, 10).reverse(),
+      }),
+    }).then(async (res) => {
+      const { response } = await res.json();
+
+      console.log(response);
+
+      // response = 'true' or 'false'
+      // if (response.toLowerCase().includes("true")) {
+        // if it's a good chance to send a gift
+        await getGifts();
+      // }
+    });
+  };
+
+  const getGifts = async () => {
+    const { response } = await fetch("/api/gift/list", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        messages: [...messages].slice(0, 10).reverse(),
+      }),
+    }).then((res) => res.json());
+
+    const gifts = JSON.parse(response);
+    console.log(gifts);
+
+    setGifts(gifts);
+    setShowGiftModal(true);
+  };
+
+  const getPaymentSecret = async (gift: any) => {
     const { paymentClientSecret } = await fetch("/api/gift", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        // price in dollars
-        price: 5,
+        price: gift.price,
       }),
     }).then((res) => res.json());
 
+    setSelectedGift(gift);
     setPaymentSecret(paymentClientSecret);
+    setShowPaymentModal(true);
   };
 
   const getCharacterImage = async () => {
@@ -195,7 +248,10 @@ const MessageInput = () => {
       }),
     });
 
+    // file zip to base64
     const { image } = await res.json();
+
+    console.log(image);
 
     const newMessage: Message = {
       author: character!.name,
@@ -230,15 +286,18 @@ const MessageInput = () => {
         />
       )}
 
-      {paymentSecret && (
+      {showGiftModal && <GiftModal gifts={gifts} buyGift={getPaymentSecret}/>}
+
+      {showPaymentModal && (
         <BuyGift
           options={{
             clientSecret: paymentSecret,
             appearance: {
               theme: "night",
-              variables: { colorPrimary: "#FD79A8" },
+              variables: { colorPrimary: "#00b8b7" },
             },
           }}
+          gift={selectedGift}
           setPaymentSecret={setPaymentSecret}
         />
       )}
@@ -262,14 +321,6 @@ const MessageInput = () => {
         >
           <PaperAirplaneIcon className="w-5 h-5 text-white" />
         </button>
-
-        <button onClick={getCharacterImage}>
-          <PhotoIcon className="w-5 h-5 text-white" />
-        </button>
-
-        {/* <button onClick={sendGift}>
-          <GiftIcon className="w-5 h-5 text-white" />
-        </button> */}
       </div>
     </div>
   );

@@ -6,7 +6,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { chat_id, user_id, payment_intent } = req.query;
+  const { chat_id, user_id, payment_intent, gift } = req.query;
 
   const payment = await stripe.paymentIntents.retrieve(
     payment_intent as string
@@ -19,6 +19,7 @@ export default async function handler(
       user_id: user_id,
       price: payment.amount,
       currency: payment.currency,
+      name: gift,
     },
   ]);
 

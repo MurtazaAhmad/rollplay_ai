@@ -10,9 +10,10 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
 type Props = {
   options: StripeElementsOptions;
   setPaymentSecret: Dispatch<SetStateAction<string>>;
+  gift: any;
 };
 
-const BuyGift: FC<Props> = ({ options, setPaymentSecret }) => {
+const BuyGift: FC<Props> = ({ options, setPaymentSecret, gift }) => {
   const [isOpen, setIsOpen] = useState(true);
 
   function closeModal() {
@@ -48,7 +49,7 @@ const BuyGift: FC<Props> = ({ options, setPaymentSecret }) => {
             >
               <Dialog.Panel className="w-full max-w-md p-6 overflow-hidden text-left align-middle transition-all transform shadow-xl bg-dark rounded-2xl">
                 <Elements stripe={stripePromise} options={options}>
-                  <GiftForm />
+                  <GiftForm gift={gift} />
                 </Elements>
               </Dialog.Panel>
             </Transition.Child>

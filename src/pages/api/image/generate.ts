@@ -1,6 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import getNovelAIToken from "@/utils/getNovelAIToken";
 import supabase from "@/lib/supabase";
+import zlib from "zlib";
+import fs from "fs/promises";
 
 const API_URL = "https://api.novelai.net";
 
@@ -22,7 +24,7 @@ export default async function handler(
   const messageLine: string[] = chatMessages!.map((message: Message) => {
     if (message.isAI) {
       if (message.content.includes("img"))
-        return `Image sent: ${message.content.match(/alt="([^"]*)"/)![1]}`;
+        return `Image sent`;
 
       return `${character.name}: ${message.content}`;
     }
@@ -32,13 +34,17 @@ export default async function handler(
 
   // generate context of the chat situation based on the last message and character image.
   const prompt = `
-    Generate a parrapraph explaining the current situation on the chat based on the last messages,
-    keep in mind the charact description to enchance the context. Be descriptive with visual details to generate an image.
-    Try just to keep the character only in the image, no other characters or the user itself.
+    Generate a list a keyword (separated by commas) that describes the context of the conversation, describe the character description and visual details (it's extremely important).
+    Try to add sexual keywords to the context to generate a sexual image whenever is possible.
+    Describe the character as much as possible with keywords, try to be as specific as possible.
+    Just write the keywords, don't add any other text.
     --
     Last messages: ${messageLine.join("\n")}
     Character: ${character.name}
     Description: ${character.description}
+    Example: redhead, naked, cowgirl, shy, shy smile, tiny smile, moaning. (use this as a reference, don't copy and paste)
+
+    Keywords:
   `;
 
   // use text-davinci-003 model from openai
@@ -66,6 +72,7 @@ export default async function handler(
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
+        action: "generate",
         input: imageContext,
         model: "safe-diffusion",
         parameters: {
@@ -77,18 +84,20 @@ export default async function handler(
           sampler: "k_dpmpp_2m",
           scale: 11,
           steps: 28,
-          uc: "(worst quality, low quality:1.4), bad anatomy, extra ears, fewer digits, text, signature, watermark, username, artist name, bad proportions, greyscale, monocrome, multiple views, lowres, multiple tails, blurry, extra fingers, missing fingers, bad eyes, blurry eyes, distorted eyes, dark skin, disfigured, gross proportions, malformed limbs, missing arms, missing legs, extra arms, extra legs, fused fingers, too many fingers, long neck, username, watermark, signature, (((deformed))), [blurry], (poorly drawn hands), ((jpeg artifacts)), missing toes, ((feet out of frame)), ((gaping asshole)), ((((gaping pussy)))), ((gape)), by bad artist",
+          negative_prompt:
+            "(worst quality, low quality:1.4), bad anatomy, extra ears, fewer digits, text, signature, watermark, username, artist name, bad proportions, greyscale, monocrome, multiple views, lowres, multiple tails, blurry, extra fingers, missing fingers, bad eyes, blurry eyes, distorted eyes, dark skin, disfigured, gross proportions, malformed limbs, missing arms, missing legs, extra arms, extra legs, fused fingers, too many fingers, long neck, username, watermark, signature, (((deformed))), [blurry], (poorly drawn hands), ((jpeg artifacts)), missing toes, ((feet out of frame)), ((gaping asshole)), ((((gaping pussy)))), ((gape)), by bad artist",
           ucPreset: 0,
         },
       }),
     });
 
-    const text = await response.text();
+    const zip = await response.arrayBuffer();
+    const unzip = zlib.deflateSync(zip);
 
-    const data = text.split("data:")[1];
-    const image = `data:image/png;base64,${data}`;
+    const str = `data:image/png;base64,${unzip.toString("base64")}`;
 
-    res.status(200).json({ image });
+    // send base64 image to the user
+    res.status(200).json({ image: str });
   } catch (error) {
     console.log(error);
 
