@@ -182,12 +182,11 @@ const MessageInput = () => {
     }).then(async (res) => {
       const { response } = await res.json();
 
-      console.log(response);
 
       // response = 'true' or 'false'
       // if (response.toLowerCase().includes("true")) {
-        // if it's a good chance to send a gift
-        await getGifts();
+      // if it's a good chance to send a gift
+      await getGifts();
       // }
     });
   };
@@ -218,6 +217,8 @@ const MessageInput = () => {
         price: gift.price,
       }),
     }).then((res) => res.json());
+
+    console.log("paymentClientSecret", paymentClientSecret);
 
     setSelectedGift(gift);
     setPaymentSecret(paymentClientSecret);
@@ -286,21 +287,21 @@ const MessageInput = () => {
         />
       )}
 
-      {showGiftModal && <GiftModal gifts={gifts} buyGift={getPaymentSecret}/>}
+      {showGiftModal && <GiftModal gifts={gifts} buyGift={getPaymentSecret} />}
 
-      {showPaymentModal && (
-        <BuyGift
-          options={{
-            clientSecret: paymentSecret,
-            appearance: {
-              theme: "night",
-              variables: { colorPrimary: "#00b8b7" },
-            },
-          }}
-          gift={selectedGift}
-          setPaymentSecret={setPaymentSecret}
-        />
-      )}
+      <BuyGift
+        options={{
+          clientSecret: paymentSecret,
+          appearance: {
+            theme: "night",
+            variables: { colorPrimary: "#00b8b7" },
+          },
+        }}
+        gift={selectedGift}
+        setPaymentSecret={setPaymentSecret}
+        isOpen={showPaymentModal}
+        setIsOpen={setShowPaymentModal}
+      />
 
       <input
         type="text"

@@ -11,11 +11,13 @@ type Props = {
   options: StripeElementsOptions;
   setPaymentSecret: Dispatch<SetStateAction<string>>;
   gift: any;
+  
+  isOpen: boolean;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
 };
 
-const BuyGift: FC<Props> = ({ options, setPaymentSecret, gift }) => {
-  const [isOpen, setIsOpen] = useState(true);
-
+const BuyGift: FC<Props> = ({ options, setPaymentSecret, gift, isOpen, setIsOpen }) => {
+  
   function closeModal() {
     setIsOpen(false);
     setPaymentSecret("");

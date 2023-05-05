@@ -55,8 +55,6 @@ export default async function handler(
         }),
       }).then((res) => res.json());
 
-      console.log(data);
-
       res.status(200).json({ response: data.choices[0].text });
     } catch (error) {
       res.status(500).json({ error });
