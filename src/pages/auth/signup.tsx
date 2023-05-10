@@ -79,10 +79,13 @@ const SignUp = () => {
   };
 
   return (
-    <main className="bg-black bg-cover bg-girl">
+    <main className="relative bg-black bg-cover bg-girl">
+      {/* overlay */}
+      <div className="fixed inset-0 bg-black opacity-50 z-[0]"></div>
+
       <Navbar />
 
-      <div className="grid h-[calc(100vh-8px)] place-items-center">
+      <div className="relative z-10 grid h-screen place-items-center">
         <section className="text-white w-[90%] md:max-w-md">
           <h1 className="text-3xl font-bold">Create an account</h1>
 

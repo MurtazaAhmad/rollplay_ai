@@ -1,9 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  PhotoIcon,
-  PaperAirplaneIcon,
-  GiftIcon,
-} from "@heroicons/react/24/outline";
+import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
 
 import { useRouter } from "next/router";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
@@ -182,12 +178,11 @@ const MessageInput = () => {
     }).then(async (res) => {
       const { response } = await res.json();
 
-
       // response = 'true' or 'false'
-      // if (response.toLowerCase().includes("true")) {
-      // if it's a good chance to send a gift
-      await getGifts();
-      // }
+      if (response.toLowerCase().includes("true")) {
+        // if it's a good chance to send a gift
+        await getGifts();
+      }
     });
   };
 
@@ -203,9 +198,8 @@ const MessageInput = () => {
     }).then((res) => res.json());
 
     const gifts = JSON.parse(response);
-    console.log(gifts);
 
-    setGifts(gifts);
+    setGifts(gifts.slice(0, 1));
     setShowGiftModal(true);
   };
 
@@ -217,8 +211,6 @@ const MessageInput = () => {
         price: gift.price,
       }),
     }).then((res) => res.json());
-
-    console.log("paymentClientSecret", paymentClientSecret);
 
     setSelectedGift(gift);
     setPaymentSecret(paymentClientSecret);
