@@ -40,11 +40,9 @@ const GiftForm = ({ gift }: { gift: any }) => {
 
     if (result.error) {
       setLoading(false);
-      console.log(result.error.message);
       return;
     }
     
-    // console.log(result.paymentIntent);
     setLoading(false);
   };
 
