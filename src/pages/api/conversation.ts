@@ -99,7 +99,7 @@ export default async function handler(
         Authorization: `Bearer ${process.env.OPENAI_SECRET_KEY}`,
       },
       body: JSON.stringify({
-        model: "gpt-3.5-turbo",
+        model: "gpt-4-32k",
         messages,
         temperature: 0.5,
       }),
