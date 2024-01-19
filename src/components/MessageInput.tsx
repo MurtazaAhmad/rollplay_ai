@@ -122,13 +122,17 @@ const MessageInput = () => {
   };
 
   const aiResponse = async () => {
+
+    try {
+      console.log("Message: ", message);
+      
     // ai answer
     setIsAIAnswering(true);
 
     autoScroll();
 
     // sending message to AI
-    const data = await fetch("/api/conversation", {
+    const res = await fetch("/api/conversation", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -138,10 +142,14 @@ const MessageInput = () => {
         ai_id: character?.id,
         chat_id: query.id,
       }),
-    }).then((res) => res.json());
-
+    });
+    const data = await res.json();
+    
     // removing all initals whitespaces on text
     const aiText = data.response[0].message.content;
+
+    console.log("/api/conversation response", aiText);
+
 
     const aiMessage = {
       author: character?.name || "",
@@ -163,6 +171,10 @@ const MessageInput = () => {
     });
 
     await checkGiftSuggestions();
+  }
+    catch(err){
+      console.log("Error: ", (err as Error).message);
+    }
   };
 
   // check if it's a good chance to send a gift
@@ -178,12 +190,17 @@ const MessageInput = () => {
     }).then(async (res) => {
       const { response } = await res.json();
 
+      console.log("Response:", response);
+      
       // response = 'true' or 'false'
       if (response.toLowerCase().includes("true")) {
         // if it's a good chance to send a gift
         await getGifts();
       }
-    });
+    })
+    .catch((err) => {
+      console.log("Error: " , err.message)
+    })
   };
 
   const getGifts = async () => {
@@ -196,7 +213,6 @@ const MessageInput = () => {
         messages: [...messages].slice(0, 10).reverse(),
       }),
     }).then((res) => res.json());
-
     const gifts = JSON.parse(response);
 
     setGifts(gifts.slice(0, 1));

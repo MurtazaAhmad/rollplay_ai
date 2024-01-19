@@ -48,14 +48,18 @@ export default async function handler(
           Authorization: `Bearer ${process.env.OPENAI_SECRET_KEY}`,
         },
         body: JSON.stringify({
-          model: "text-davinci-003",
+          model: "gpt-3.5-turbo-instruct",  //text-davinci-003
           prompt,
           temperature: 0,
           max_tokens: 2048,
         }),
-      }).then((res) => res.json());
+      })
+      
+      const json = await data.json();
+      console.log("gift list:", json);
+      
 
-      res.status(200).json({ response: data.choices[0].text });
+      res.status(200).json({ response: json.choices[0].text });
     } catch (error) {
       res.status(500).json({ error });
     }

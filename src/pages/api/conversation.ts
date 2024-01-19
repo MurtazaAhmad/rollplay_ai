@@ -12,14 +12,15 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const { ai_id, chat_id, input } = req.body as Body;
-
+  console.log("Input to API:", input);
+  
   // get 15 last messages to give more context.
   const { data: chatMessages } = await supabase
     .from("messages")
     .select()
     .eq("chat_id", chat_id)
     .order("timestamp", { ascending: true })
-    .limit(15);
+    .limit(5);
 
   // character
   const { data: characterData } = await supabase
@@ -28,7 +29,12 @@ export default async function handler(
     .eq("id", ai_id)
     .single();
 
+  console.log('Chat Messages:' , chatMessages);
+  
+
   const messageLine: AIMessage[] = chatMessages!.map((message: any) => {
+
+
     if (message.isAI) {
       if (message.content.includes("img")) {
         return {
@@ -37,6 +43,8 @@ export default async function handler(
           content: `Image sent: ${message.content.match(/alt="([^"]*)"/)![1]}`,
         };
       }
+
+
 
       return {
         role: "assistant",
@@ -92,7 +100,9 @@ export default async function handler(
   ];
 
   try {
-    const data = await fetch("https://api.openai.com/v1/chat/completions", {
+    // console.log("messages");
+    // console.log(messages);
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -103,8 +113,11 @@ export default async function handler(
         messages,
         temperature: 0.5,
       }),
-    }).then((res) => res.json());
+    })
 
+    const data = await response.json();
+    console.log("Response back from API: ", data);
+    
     res.status(200).json({ response: data.choices });
   } catch (error) {
     console.error(error);
