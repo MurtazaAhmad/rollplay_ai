@@ -188,6 +188,7 @@ const MessageInput = () => {
         messages: [...messages].slice(0, 10).reverse(),
       }),
     }).then(async (res) => {
+
       const { response } = await res.json();
 
       console.log("Response:", response);

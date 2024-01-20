@@ -20,7 +20,7 @@ export default async function handler(
     .select()
     .eq("chat_id", chat_id)
     .order("timestamp", { ascending: true })
-    .limit(5);
+    .limit(30);
 
   // character
   const { data: characterData } = await supabase
