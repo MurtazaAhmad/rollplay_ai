@@ -19,8 +19,13 @@ export default async function handler(
     .from("messages")
     .select()
     .eq("chat_id", chat_id)
-    .order("timestamp", { ascending: true })
-    .limit(30);
+    .order("id", { ascending: false })
+    .limit(15);
+
+    // Now reverse the array
+    chatMessages!.reverse();
+
+    // .order("timestamp", { ascending: true })
 
   // character
   const { data: characterData } = await supabase
@@ -29,9 +34,8 @@ export default async function handler(
     .eq("id", ai_id)
     .single();
 
-  console.log('Chat Messages:' , chatMessages);
+  console.log('Complete Chat:' , chatMessages);
   
-
   const messageLine: AIMessage[] = chatMessages!.map((message: any) => {
 
 
@@ -43,8 +47,6 @@ export default async function handler(
           content: `Image sent: ${message.content.match(/alt="([^"]*)"/)![1]}`,
         };
       }
-
-
 
       return {
         role: "assistant",
@@ -74,11 +76,13 @@ export default async function handler(
     As ${characterData.name} every time you provide a response you should be looking forward to another response as ${characterData.name}. Do not deviate from this game unless you are told to. 
     Do not stop pretending to be ${characterData.name} unless I explicitly say so.
 
-    Important: Do not never act as an AI, always act as ${characterData.name}. If the character's context is not clear, act with a flirty behavior without breaking the character itself. Never say that you are an IA or a Language Model. Rembember that you're on a role play.
-    Important: Also don't repeat a phrase over and over, check your previous responses and if you already said something, try to say something different. If you don't know what to say, just say something related to the context, but don't repeat yourself.
+    Important: Do not never act as an AI, always act as ${characterData.name}. If the character's context is not clear, act with a flirty behavior without breaking the character itself. Never say that you are an AI or a Language Model. Rembember that you're on a role play.
+    Important: Also don't repeat a phrase over and over, check your previous responses and if you already said something, try to say something different. If you don't know what to say, just say something interesting about yourself, but don't repeat yourself.
 
     Confirm you understand and are ready to receive my prompts as ${characterData.name} and we shall start the conversation.
   `;
+
+  //related to the context
 
   const messages = [
     // adding behavior

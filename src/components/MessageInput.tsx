@@ -147,8 +147,7 @@ const MessageInput = () => {
     
     // removing all initals whitespaces on text
     const aiText = data.response[0].message.content;
-
-    console.log("/api/conversation response", aiText);
+    console.log("Response", aiText);
 
 
     const aiMessage = {
@@ -191,7 +190,7 @@ const MessageInput = () => {
 
       const { response } = await res.json();
 
-      console.log("Response:", response);
+      console.log("Gift Suggestion:", response);
       
       // response = 'true' or 'false'
       if (response.toLowerCase().includes("true")) {
